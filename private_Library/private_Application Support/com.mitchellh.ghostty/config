@@ -1,0 +1,15 @@
+theme = catppuccin-frappe
+
+# font-family = "ComicShannsMono Nerd Font Mono"
+font-family = "3720 Nerd Font Mono"
+
+cursor-opacity = 0.8
+cursor-style = block
+cursor-style-blink = true
+mouse-hide-while-typing = true
+
+
+background-opacity = 0.6
+background-blur = 20
+
+macos-titlebar-style = tabs

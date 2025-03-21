@@ -1,0 +1,515 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+#right_format = """
+
+#$time\
+
+#"""
+
+format = """
+[░▒▓](color_magenta)\
+$os\
+$shell\
+[](bg:color_orange fg:color_magenta)\
+$username\
+$hostname\
+$sudo\
+[](bg:color_yellow fg:color_orange)\
+$directory\
+[](fg:color_yellow bg:color_aqua)\
+$git_branch\
+$git_status\
+$git_commit\
+$git_metrics\
+$git_state\
+[](fg:color_aqua bg:color_blue)\
+$c\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:color_blue bg:color_bg3)\
+$docker_context\
+$conda\
+$container\
+$package\
+[](fg:color_bg3 bg:color_bg1)\
+$time\
+[](fg:color_bg1)\
+$fill\
+[](fg:color_bg1)\
+$localip\
+$battery\
+$memory_usage\
+$cmd_duration\
+[▓▒░](fg:color_bg1)\
+$line_break$character\
+"""
+
+
+palette = 'gruvbox_dark'
+
+[palettes.gruvbox_dark]
+color_fg0 = '#fbf1c7' #fbf1c7
+color_bg1 = '#3c3836' #3c3836
+color_bg3 = '#665c54' #665c54
+color_blue = '#458588' #458588
+color_aqua = '#689d6a' #689d6a
+color_green = '#98971a' #98971a
+color_orange = '#d65d0e' #d65d0e
+color_purple = '#b16286' #b16286
+color_red = '#cc241d' #cc241d
+color_yellow = '#d79921' #d79921
+color_magenta = '#b16286' #b16286
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc" #f5e0dc
+flamingo = "#f2cdcd" #f2cdcd
+pink = "#f5c2e7" #f5c2e7
+mauve = "#cba6f7" #cba6f7
+red = "#f38ba8" #f38ba8
+maroon = "#eba0ac" #eba0ac
+peach = "#fab387" #fab387
+yellow = "#f9e2af" #f9e2af
+green = "#a6e3a1" #a6e3a1
+teal = "#94e2d5" #94e2d5
+sky = "#89dceb" #89dceb
+sapphire = "#74c7ec" #74c7ec
+blue = "#89b4fa" #89b4fa
+lavender = "#b4befe" #b4befe
+text = "#cdd6f4" #cdd6f4
+subtext1 = "#bac2de" #bac2de
+subtext0 = "#a6adc8" #a6adc8
+overlay2 = "#9399b2" #9399b2
+overlay1 = "#7f849c" #7f849c
+overlay0 = "#6c7086" #6c7086
+surface2 = "#585b70" #585b70
+surface1 = "#45475a" #45475
+surface0 = "#313244" #313244
+base = "#1e1e2e" #1e1e2e
+mantle = "#181825" #181825
+crust = "#11111b" #11111b
+
+[palettes.catppuccin_latte]
+rosewater = "#dc8a78" #dc8a78
+flamingo = "#dd7878" #dd7878
+pink = "#ea76cb" #ea76cb
+mauve = "#8839ef" #8839ef
+red = "#d20f39" #d20f39
+maroon = "#e64553" #e64553
+peach = "#fe640b" #fe640b
+yellow = "#df8e1d" #df8e1d
+green = "#40a02b" #40a02b
+teal = "#179299" #179299
+sky = "#04a5e5" #04a5e5
+sapphire = "#209fb5" #209fb5
+blue = "#1e66f5" #1e66f5
+lavender = "#7287fd" #7287fd
+text = "#4c4f69" #4c4f69
+subtext1 = "#5c5f77" #5c5f77
+subtext0 = "#6c6f85" #6c6f85
+overlay2 = "#7c7f93" #7c7f93
+overlay1 = "#8c8fa1" #8c8fa1
+overlay0 = "#9ca0b0" #9ca0b0
+surface2 = "#acb0be" #acb0be
+surface1 = "#bcc0cc" #bcc0cc
+surface0 = "#ccd0da" #ccd0da
+base = "#eff1f5" #eff1f5
+mantle = "#e6e9ef" #e6e9ef
+crust = "#dce0e8" #dce0e8
+
+[palettes.catppuccin_frappe]
+rosewater = "#f2d5cf" #f2d5cf
+flamingo = "#eebebe" #eebebe
+pink = "#f4b8e4" #f4b8e4
+mauve = "#ca9ee6" #ca9ee6
+red = "#e78284" #e78284
+maroon = "#ea999c" #ea999c
+peach = "#ef9f76" #ef9f76
+yellow = "#e5c890" #e5c890
+green = "#a6d189" #a6d189
+teal = "#81c8be" #81c8be
+sky = "#99d1db" #99d1db
+sapphire = "#85c1dc" #85c1dc
+blue = "#8caaee" #8caaee
+lavender = "#babbf1" #babbf1
+text = "#c6d0f5" #c6d0f5
+subtext1 = "#b5bfe2" #b5bfe2
+subtext0 = "#a5adce" #a5adce
+overlay2 = "#949cbb" #949cbb
+overlay1 = "#838ba7" #838ba7
+overlay0 = "#737994" #737994
+surface2 = "#626880" #626880
+surface1 = "#51576d" #51576d
+surface0 = "#414559" #414559
+base = "#303446" #303446
+mantle = "#292c3c" #292c3c
+crust = "#232634" #232634
+
+[palettes.catppuccin_macchiato]
+rosewater = "#f4dbd6" #f4dbd6
+flamingo = "#f0c6c6" #f0c6c6
+pink = "#f5bde6" #f5bde6
+mauve = "#c6a0f6" #c6a0f6
+red = "#ed8796" #ed8796
+maroon = "#ee99a0" #ee99a0
+peach = "#f5a97f" #f5a97f
+yellow = "#eed49f" #eed49f
+green = "#a6da95" #a6da95
+teal = "#8bd5ca" #8bd5ca
+sky = "#91d7e3" #91d7e3
+sapphire = "#7dc4e4" #7dc4e4
+blue = "#8aadf4" #8aadf4
+lavender = "#b7bdf8" #b7bdf8
+text = "#cad3f5" #cad3f5
+subtext1 = "#b8c0e0" #b8c0e0
+subtext0 = "#a5adcb" #a5adcb
+overlay2 = "#939ab7" #939ab7
+overlay1 = "#8087a2" #8087a2
+overlay0 = "#6e738d" #6e738d
+surface2 = "#5b6078" #5b6078
+surface1 = "#494d64" #494d64
+surface0 = "#363a4f" #363a4f
+base = "#24273a" #24273a
+mantle = "#1e2030" #1e2030
+crust = "#181926" #181926
+
+[os]
+disabled = false
+style = "bg:color_magenta fg:color_fg0"
+
+[os.symbols]
+Windows = "󰍲 "
+Ubuntu = "󰕈 "
+SUSE = " "
+Raspbian = "󰐿 "
+Mint = "󰣭 "
+Macos = "󰀵 macOS"
+Manjaro = " "
+Linux = "󰌽"
+NixOS = " "
+Gentoo = "󰣨 "
+Fedora = "󰣛 "
+Alpine = " "
+Amazon = ""
+Android = ""
+Arch = "󰣇"
+Artix = "󰣇"
+EndeavourOS = " "
+CentOS = " "
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛 "
+Pop = " "
+
+
+[username]
+show_always = true
+style_user = "bg:color_orange fg:color_fg0"
+style_root = "bg:color_orange fg:color_fg0"
+# detect_env_vars = [  ]
+format = '[ $user ]($style)'
+aliases = {"root" = "sudo"}
+
+[directory]
+disabled = false
+truncation_length = 15
+truncation_symbol = "/"
+truncate_to_repo = true
+read_only = " "
+read_only_style ="red"
+style = "fg:color_fg0 bg:color_yellow"
+format = "[ $path ]($style)"
+
+[directory.substitutions]
+"root" = " "
+".config" = " "
+"~" = "󰋜 "
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+"Projects" = "󰀚 "
+
+[git_branch]
+truncation_length = 50
+truncation_symbol = ""
+# ignore_branches = ["main", "master", "develop", "dev"]
+symbol = ""
+style = "bg:color_aqua"
+format = '[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)'
+
+[git_commit]
+commit_hash_length = 7
+only_detached = true
+tag_disabled = false
+tag_max_candidates =0
+tag_symbol = " "
+style = "bg:color_aqua"
+format = '[$tag_symbol $tag \[$hash\]]($style)'
+
+[git_state]
+rebase = "REBASING"
+merge = "MERGING"
+revert = "REVERTING"
+cherry_pick = "CHERRY-PICKING"
+bisect = "BISECTING"
+am = "AM"
+am_or_rebase = "AM/REBASE"
+style = "bold yellow bg:color_aqua"
+format = '\([$state( $progress_current/$progress_total)]($style)\)'
+
+[git_metrics]
+disabled = false
+added_style = "bold green bg:color_aqua"
+deleted_style = "bold red bg:color_aqua"
+only_nonzero_diffs = true
+format = '[+$added]($added_style)[/](bg:color_aqua)[-$deleted]($deleted_style)'
+ignore_submodules = false
+
+[git_status]
+style = "bg:color_aqua"
+format = '([\[$all_status$ahead_behind\]]($style))'
+conflicted = "="
+ahead = "[⇡](bold green bg:color_aqua)"
+behind = "[⇣](bold red bg:color_aqua)"
+diverged = "[⇕]"
+up_to_date = "[✓](bold green bg:color_aqua)"
+untracked = "?"
+stashed = "$"
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "[✘](bold red bg:color_aqua)"
+typechanged = ""
+ignore_submodules = false
+disabled = false
+
+[nodejs]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[c]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[rust]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[golang]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[php]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[java]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[kotlin]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[haskell]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[python]
+symbol = " "
+style = "bg:color_blue"
+format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
+
+[lua]
+symbol = " "
+style = "bg:color_blue"
+format = 'via [$symbol($version )]($style)'
+version_format = 'v${raw}'
+detect_extensions = ['LUA']
+detect_files = ['.lua-version']
+detect_folders = ['lua']
+lua_binary = 'lua'
+
+[shell]
+disabled = false
+bash_indicator = ' bsh'
+fish_indicator = ' fsh'
+zsh_indicator = ' zsh'
+powershell_indicator = ' pwsh'
+cmd_indicator = ' cmd'
+nu_indicator = ' nu'
+tcsh_indicator = ' tcsh'
+xonsh_indicator = ' xsh'
+elvish_indicator = ' evsh'
+style = "bg:color_magenta fg:color_fg0"
+format = '[ $indicator]($style)'
+
+[sudo]
+disabled = false
+symbol = " "
+style = "bg:color_orange fg:color_fg0"
+format = '[$symbol]($style)'
+
+[hostname]
+ssh_only = true
+ssh_symbol = " "
+trim_at = '.'
+detect_env_vars = [ '!TMUX', "SSH_CLIENT", "SSH_TTY", "SSH_CONNECTION" ]
+format = '[$ssh_symbol$hostname]($style) in '
+style = 'bold dimmed green'
+disabled = false
+aliases = {"192.168.1.77" = "4090"}
+
+[docker_context]
+symbol = " "
+style = "bg:color_bg3"
+format = '[[ $symbol( $context) ](fg:#83a598 bg:color_bg3)]($style)'
+
+[conda]
+style = "bg:color_bg3"
+format = '[[ $symbol( $environment) ](fg:#83a598 bg:color_bg3)]($style)'
+
+[container]
+symbol = " "
+style = "bg:color_bg3"
+format = '[$symbol \[$name\]]($style) '
+
+[package]
+format = 'via [🎁 $version](208 bold) '
+
+[battery]
+disabled = false
+# full_symbol = '[󰁹](fg:color_aqua)'
+# charging_symbol = '[󰂄](fg:color_aqua)'
+# discharging_symbol = '[󰂃](fg:color_aqua)'
+# unknown_symbol = '[󰁽](fg:color_aqua)'
+# empty_symbol = '[󰂎](fg:color_aqua)'
+format = '[$symbol$percentage]($style)'
+
+[[battery.display]] # 'bold green' style and discharging_symbol when capacity is between 90% and 95%
+threshold = 100
+style = "bold green bg:color_bg1"
+charging_symbol = '[󰂄](fg:bold red)'
+discharging_symbol = '[󰂃]($style)'
+
+[[battery.display]] # 'bold green' style and discharging_symbol when capacity is between 80% and 90%
+threshold = 90
+style = "bold green bg:color_bg1"
+charging_symbol = '[󰂋](fg:bold green)'
+discharging_symbol = '󰂂'
+
+[[battery.display]] # 'bold green' style and discharging_symbol when capacity is between 70% and 80%
+threshold = 80
+style = "bold green bg:color_bg1"
+charging_symbol = '󰂊 '
+discharging_symbol = '󰂁'
+
+[[battery.display]] # 'bold green' style and discharging_symbol when capacity is between 60% and 70%
+threshold = 70
+style = "bold green bg:color_bg1"
+charging_symbol = '󰢞 '
+discharging_symbol = '󰂀'
+
+[[battery.display]] # 'bold green' style and discharging_symbol when capacity is between 50% and 60%
+threshold = 60
+style = "bold green bg:color_bg1"
+charging_symbol = '󰂉 '
+discharging_symbol = '󰁿'
+
+[[battery.display]] # 'bold green' style and discharging_symbol when capacity is between 40% and 50%
+threshold = 50
+style = "bold green bg:color_bg1"
+charging_symbol = '󰢝 '
+discharging_symbol = '󰁾'
+
+[[battery.display]] # 'bold yellow' style and symbol when capacity is between 30% and 40%
+threshold = 40
+style = "bold yellow bg:color_bg1"
+charging_symbol = '󰂈 '
+discharging_symbol = '󰁽'
+
+[[battery.display]] # 'bold yellow' style and symbol when capacity is between 20% and 30%
+threshold = 30
+style = "bold yellow bg:color_bg1"
+charging_symbol = '󰂇'
+discharging_symbol = '󰁼'
+
+[[battery.display]] # 'bold red' style and discharging_symbol when capacity is between 10% and 20%
+threshold = 20
+style = "bold red bg:color_bg1"
+charging_symbol = '󰂆 '
+discharging_symbol = '󰁻'
+
+[[battery.display]] # 'bold red' style and discharging_symbol when capacity is between 5% and 10%
+threshold = 10
+style = "bold red bg:color_bg1"
+charging_symbol = '󰢜 '
+discharging_symbol = '󰁺'
+
+[[battery.display]] # 'bold red' style and discharging_symbol when capacity is between 0% and 5%
+threshold = 5
+style = "bold red bg:color_bg1"
+charging_symbol = '󰢟 '
+discharging_symbol = '󰂎'
+
+
+
+[memory_usage]
+disabled = false
+threshold = 80
+format='[ $symbol${ram} ${ram_pct} ${swap} ${swap_pct}]($style)'
+symbol = ' '
+style = "bg:color_bg1 fg:color_fg0"
+
+[localip]
+disabled = false
+ssh_only = true
+format = '[$localipv4]($style) '
+style = "bg:color_bg1 fg:color_fg0"
+
+[time]
+disabled = false
+time_format = "%I:%M%p %a %b %e "
+use_12hr = true
+style = "bg:color_bg1"
+format = '[[  $time](fg:color_fg0 bg:color_bg1)]($style)'
+
+[cmd_duration]
+disabled = false
+style = "fg:color_fg0 bg:color_bg1"
+min_time = 2000
+show_notifications = true
+format = "[ $duration]($style)"
+
+[fill]
+disabled = false
+symbol = " "
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[󰄛 ](bold fg:color_aqua)'
+error_symbol = '[󰄛 ](bold fg:color_red)'
+vimcmd_symbol = '[ ](bold fg:color_aqua)'
+vimcmd_replace_one_symbol = '[ ](bold fg:color_purple)'
+vimcmd_replace_symbol = '[ ](bold fg:color_purple)'
+vimcmd_visual_symbol = '[](bold fg:color_yellow)'
+
+[custom.test]
