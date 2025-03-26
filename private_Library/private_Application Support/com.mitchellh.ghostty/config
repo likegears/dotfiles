@@ -1,4 +1,4 @@
-theme = catppuccin-frappe
+theme = light:catppuccin-latte,dark:catppuccin-frappe.
 
 # font-family = "ComicShannsMono Nerd Font Mono"
 font-family = "3720 Nerd Font Mono"

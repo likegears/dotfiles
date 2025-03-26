@@ -1,8 +1,15 @@
 local wezterm = require 'wezterm'
 local config = {}
 
--- Set the color scheme to Catppuccin Mocha
-config.color_scheme = 'Catppuccin Mocha'
+-- Detect system appearance and choose the theme accordingly
+if wezterm.gui then
+    local appearance = wezterm.gui.get_appearance()
+    if appearance:find("Dark") then
+      config.color_scheme = "Catppuccin Mocha" -- replace with your preferred dark theme
+    else
+      config.color_scheme = "Catppuccin Latte" -- replace with your preferred light theme
+    end
+  end
 
 -- Set window background opacity to 50%
 config.window_background_opacity = 0.5
