@@ -1,0 +1,78 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "git_panel": {
+    "tree_view": true
+  },
+  "ssh_connections": [
+    {
+      "host": "ai",
+      "projects": [
+        {
+          "paths": [
+            "/"
+          ]
+        },
+        {
+          "paths": [
+            "/home/long"
+          ]
+        },
+        {
+          "paths": [
+            "/home/long/workspace"
+          ]
+        },
+        {
+          "paths": [
+            "/home/long/workspace/validation/CLAUDE.md"
+          ]
+        }
+      ],
+      "upload_binary_over_ssh": true
+    }
+  ],
+  "icon_theme": {
+    "mode": "system",
+    "light": "Catppuccin Latte",
+    "dark": "Catppuccin Mocha"
+  },
+
+  "agent": {
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "claude-3-7-sonnet"
+    },
+  },
+  "features": {
+    "edit_prediction_provider": "zed"
+  },
+  "vim_mode": true,
+  "ui_font_size": 16,
+  "buffer_font_size": 12.0,
+  "buffer_font_fallbacks": ["ZedMono Nerd Font"],
+
+  "terminal": {
+    "line_height": "standard"
+  },
+
+  "theme": {
+    "mode": "system",
+    "light": "Catppuccin Latte (Blur)",
+    "dark": "Catppuccin Mocha (Blur)",
+
+    "indent_guides": {
+      "enabled": true,
+      "active_line_width": 1,
+      "coloring": "indent_aware",
+      "background_coloring": "indent_aware",
+      "line_width": 1
+    }
+  }
+}

@@ -1,0 +1,6 @@
+**/.DS_Store
+**/*.bak
+**/*.backup
+**/*.log
+**/conversations
+**/prompts

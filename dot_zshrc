@@ -1,34 +1,25 @@
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
+# Starship prompt init - auto-detect Nerd Font
+if fc-list 2>/dev/null | grep -qi "nerd" \
+  || [[ -n $(ls ~/Library/Fonts/*erd* /Library/Fonts/*erd* /usr/share/fonts/**/[Nn]erd* 2>/dev/null | head -1) ]] \
+  || [[ "$NERD_FONT" == "1" ]]; then
+  export STARSHIP_CONFIG=~/.config/starship.toml
 else
-    if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
-    fi
+  export STARSHIP_CONFIG=~/.config/starship-plain.toml
 fi
-unset __conda_setup
-
-if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/mamba.sh" ]; then
-    . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/mamba.sh"
-fi
-# <<< conda initialize <<<
-
-
-
-#starship PATH
-#export STARSHIP_CONFIG=~/.config/starship
-
-# Starship prompt init
 eval "$(starship init zsh)"
 
-# alias
-alias mactop='sudo mactop'
+# run local files
+PATH="$PATH:./"
 
 #set default editor
 export EDITOR="nvim"
-export VISUAL="nvim"
+export VISUAL="zed"
+
+export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+# wget XDG alias
+alias wget='wget --hsts-file="$XDG_STATE_HOME/wget/hsts"'
+
+# Added by Antigravity
+export PATH="/Users/gears/.antigravity/antigravity/bin:$PATH"

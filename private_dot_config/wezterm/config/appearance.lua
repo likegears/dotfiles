@@ -35,6 +35,10 @@ return {
    show_tab_index_in_tab_bar = false,
    switch_to_last_active_tab_when_closing_tab = true,
 
+    -- open size
+    initial_rows = 40,
+    initial_cols = 120,
+
    -- window
    window_padding = {
       left = 0,

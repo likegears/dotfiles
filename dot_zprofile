@@ -1,6 +1,11 @@
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+## direnv hook
+eval "$(direnv hook zsh)"
+
+# zoxide init
+eval "$(zoxide init zsh)"
 
 # Added by Toolbox App
 export PATH="$PATH:/Users/gears/Library/Application Support/JetBrains/Toolbox/scripts"
@@ -10,7 +15,6 @@ export PATH="$PATH:/Users/gears/Library/Application Support/JetBrains/Toolbox/sc
 # This won't be added again if you remove it.
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
-
 # fzf catppuccin theme
 export FZF_DEFAULT_OPTS=" \
 --color=spinner:#f4dbd6,hl:#ed8796 \
@@ -18,3 +22,6 @@ export FZF_DEFAULT_OPTS=" \
 --color=marker:#b7bdf8,fg+:#cad3f5,prompt:#c6a0f6,hl+:#ed8796 \
 --color=selected-bg:#494d64 \
 --color=border:#363a4f,label:#cad3f5"
+
+# Added by Obsidian
+export PATH="$PATH:/System/Volumes/Data/Applications/Obsidian.app/Contents/MacOS"

@@ -1,7 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Powerline + Nerd Font (primary config)
-# Right side mirrors left side color flow for visual symmetry
+# Powerline fallback (no Nerd Font required)
+# Same layout as starship.toml but with text-based symbols
 
 format = """
 [](color_magenta)\
@@ -53,8 +53,6 @@ $line_break$character\
 
 palette = 'gruvbox_dark'
 
-# Catppuccin palettes: https://github.com/catppuccin/starship
-
 [palettes.gruvbox_dark]
 color_fg0 = '#fbf1c7'
 color_bg1 = '#3c3836'
@@ -68,62 +66,58 @@ color_red = '#cc241d'
 color_yellow = '#d79921'
 color_magenta = '#b16286'
 
-# ── OS & Shell ─────────────────────────────────
-
 [os]
 disabled = false
 style = "bg:color_magenta fg:color_fg0"
 
 [os.symbols]
-Windows = "󰍲 "
-Ubuntu = "󰕈 "
-SUSE = " "
-Raspbian = "󰐿 "
-Mint = "󰣭 "
-Macos = "󰀵 macOS"
-Manjaro = " "
-Linux = "󰌽"
-NixOS = " "
-Gentoo = "󰣨 "
-Fedora = "󰣛 "
-Alpine = " "
-Amazon = ""
-Android = ""
-Arch = "󰣇"
-Artix = "󰣇"
-EndeavourOS = " "
-CentOS = " "
-Debian = "󰣚"
-Redhat = "󱄛"
-RedHatEnterprise = "󱄛 "
-Pop = " "
+Macos = " macOS"
+Windows = "Win"
+Ubuntu = "Ubuntu"
+SUSE = "SUSE"
+Raspbian = "RPi"
+Mint = "Mint"
+Manjaro = "Manjaro"
+Linux = "Linux"
+NixOS = "NixOS"
+Gentoo = "Gentoo"
+Fedora = "Fedora"
+Alpine = "Alpine"
+Amazon = "AWS"
+Android = "Android"
+Arch = "Arch"
+Artix = "Artix"
+EndeavourOS = "EndOS"
+CentOS = "CentOS"
+Debian = "Debian"
+Redhat = "RHEL"
+RedHatEnterprise = "RHEL"
+Pop = "Pop"
 
 [shell]
 disabled = false
-bash_indicator = ' bsh'
-fish_indicator = ' fsh'
-zsh_indicator = ' zsh'
-powershell_indicator = ' pwsh'
-cmd_indicator = ' cmd'
-nu_indicator = ' nu'
-tcsh_indicator = ' tcsh'
-xonsh_indicator = ' xsh'
-elvish_indicator = ' evsh'
+bash_indicator = 'bash'
+fish_indicator = 'fish'
+zsh_indicator = 'zsh'
+powershell_indicator = 'pwsh'
+cmd_indicator = 'cmd'
+nu_indicator = 'nu'
+tcsh_indicator = 'tcsh'
+xonsh_indicator = 'xsh'
+elvish_indicator = 'elvish'
 style = "bg:color_magenta fg:color_fg0"
-format = '[$indicator]($style)'
-
-# ── User & Host ────────────────────────────────
+format = '[ $indicator]($style)'
 
 [username]
 show_always = true
 style_user = "bg:color_orange fg:color_fg0"
 style_root = "bg:color_orange fg:color_fg0"
 format = '[ $user ]($style)'
-aliases = { "root" = "sudo" }
+aliases = { "root" = "ROOT" }
 
 [hostname]
 ssh_only = true
-ssh_symbol = " "
+ssh_symbol = "ssh:"
 trim_at = '.'
 detect_env_vars = ['!TMUX', "SSH_CLIENT", "SSH_TTY", "SSH_CONNECTION"]
 format = '[$ssh_symbol$hostname ]($style)'
@@ -133,50 +127,35 @@ aliases = { "192.168.1.77" = "4090" }
 
 [sudo]
 disabled = false
-symbol = " "
+symbol = "sudo!"
 style = "bg:color_orange fg:color_fg0"
-format = '[$symbol]($style)'
-
-# ── Directory ──────────────────────────────────
+format = '[ $symbol ]($style)'
 
 [directory]
 disabled = false
 truncation_length = 15
 truncation_symbol = "…/"
 truncate_to_repo = true
-read_only = " "
+read_only = " RO"
 read_only_style = "red"
 style = "fg:color_fg0 bg:color_yellow"
 format = "[ $path ]($style)"
 
-[directory.substitutions]
-"root" = " "
-".config" = " "
-"~" = "󰋜 "
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = "󰝚 "
-"Pictures" = " "
-"Developer" = "󰲋 "
-"Projects" = "󰀚 "
-
-# ── Git ────────────────────────────────────────
-
 [git_branch]
 truncation_length = 50
-truncation_symbol = ""
+truncation_symbol = "..."
 symbol = ""
 style = "bg:color_aqua"
-format = '[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)'
+format = '[[ $branch ](fg:color_fg0 bg:color_aqua)]($style)'
 
 [git_commit]
 commit_hash_length = 7
 only_detached = true
 tag_disabled = false
 tag_max_candidates = 0
-tag_symbol = " "
+tag_symbol = "tag:"
 style = "bg:color_aqua"
-format = '[$tag_symbol $tag \[$hash\]]($style)'
+format = '[ $tag_symbol$tag \[$hash\] ](fg:color_fg0 bg:color_aqua)'
 
 [git_state]
 rebase = "REBASING"
@@ -203,67 +182,65 @@ format = '([\[$all_status$ahead_behind\]]($style))'
 conflicted = "="
 ahead = "[⇡](bold green bg:color_aqua)"
 behind = "[⇣](bold red bg:color_aqua)"
-diverged = "[⇕]"
+diverged = "⇕"
 up_to_date = "[✓](bold green bg:color_aqua)"
 untracked = "?"
 stashed = "$"
 modified = "!"
 staged = "+"
 renamed = "»"
-deleted = "[✘](bold red bg:color_aqua)"
+deleted = "[✗](bold red bg:color_aqua)"
 typechanged = ""
 ignore_submodules = false
 disabled = false
 
-# ── Languages ──────────────────────────────────
-
 [nodejs]
-symbol = " "
+symbol = "node"
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [c]
-symbol = " "
+symbol = "C"
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [rust]
-symbol = " "
+symbol = "rs"
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [golang]
-symbol = " "
+symbol = "go"
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [php]
-symbol = " "
+symbol = "php"
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [java]
-symbol = " "
+symbol = "java"
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [kotlin]
-symbol = " "
+symbol = "kt"
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [haskell]
-symbol = " "
+symbol = "hs"
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [python]
-symbol = " "
+symbol = "py"
 style = "bg:color_blue"
 format = '[[ $symbol($version)(\($virtualenv\)) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [lua]
-symbol = " "
+symbol = "lua"
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 version_format = 'v${raw}'
@@ -272,40 +249,35 @@ detect_files = ['.lua-version']
 detect_folders = ['lua']
 lua_binary = 'lua'
 
-# ── Containers & Packages ─────────────────────
-
 [docker_context]
-symbol = " "
+symbol = "docker:"
 style = "bg:color_bg3"
-format = '[[ $symbol($context) ](fg:#83a598 bg:color_bg3)]($style)'
+format = '[[ $symbol$context ](fg:#83a598 bg:color_bg3)]($style)'
 
 [conda]
+symbol = "conda:"
 style = "bg:color_bg3"
-format = '[[ $symbol($environment) ](fg:#83a598 bg:color_bg3)]($style)'
+format = '[[ $symbol$environment ](fg:#83a598 bg:color_bg3)]($style)'
 
 [container]
-symbol = " "
+symbol = "ctr:"
 style = "bg:color_bg3"
-format = '[$symbol \[$name\]]($style) '
+format = '[ $symbol$name ]($style)'
 
 [package]
-symbol = "󰏗 "
+symbol = "pkg:"
 style = "bg:color_bg3"
 format = '[[ $symbol$version ](fg:#83a598 bg:color_bg3)]($style)'
 
-# ── Right side: bg3 segment (system status) ───
-
 [status]
 disabled = false
-format = '[ $symbol$status ](bold red bg:color_bg3)'
-symbol = ' '
+format = '[ ✗$status ](bold red bg:color_bg3)'
 
 [jobs]
 disabled = false
-symbol = '󰜎 '
 number_threshold = 1
 symbol_threshold = 1
-format = '[ $symbol$number ](bold color_aqua bg:color_bg3)'
+format = '[ &$number ](bold color_aqua bg:color_bg3)'
 
 [localip]
 disabled = false
@@ -314,44 +286,41 @@ format = '[ $localipv4 ](fg:color_fg0 bg:color_bg3)'
 
 [battery]
 disabled = false
-full_symbol = '󰂄 '
-charging_symbol = '󰂄 '
-discharging_symbol = '󰂃 '
-unknown_symbol = '󰂑 '
-empty_symbol = '󰂎 '
+full_symbol = '⚡'
+charging_symbol = '⚡'
+discharging_symbol = '▽'
+unknown_symbol = '?'
+empty_symbol = '!'
 format = '[ $symbol$percentage ](fg:color_fg0 bg:color_bg3)'
 
 [[battery.display]]
 threshold = 10
 style = "bold red bg:color_bg3"
-charging_symbol = '󰢜 '
-discharging_symbol = '󰁺 '
+charging_symbol = '⚡'
+discharging_symbol = '▼'
 
 [[battery.display]]
 threshold = 30
 style = "bold yellow bg:color_bg3"
-charging_symbol = '󰂇 '
-discharging_symbol = '󰁼 '
+charging_symbol = '⚡'
+discharging_symbol = '▽'
 
 [[battery.display]]
 threshold = 60
 style = "bold green bg:color_bg3"
-charging_symbol = '󰂉 '
-discharging_symbol = '󰁿 '
+charging_symbol = '⚡'
+discharging_symbol = '▽'
 
 [[battery.display]]
 threshold = 100
 style = "bold green bg:color_bg3"
-charging_symbol = '󰂄 '
-discharging_symbol = '󰂂 '
+charging_symbol = '⚡'
+discharging_symbol = '▽'
 
 [memory_usage]
 disabled = false
 threshold = 80
-format = '[ $symbol${ram} ${ram_pct} ](fg:color_fg0 bg:color_bg3)'
-symbol = ' '
-
-# ── Right side: blue segment (timing) ─────────
+format = '[ ram:${ram} ${ram_pct} ](fg:color_fg0 bg:color_bg3)'
 
 [cmd_duration]
 disabled = false
@@ -360,16 +329,12 @@ show_notifications = false
 format = '[[ $duration ](fg:color_fg0 bg:color_blue)]($style)'
 style = "bg:color_blue"
 
-# ── Right side: aqua segment (clock) ──────────
-
 [time]
 disabled = false
 time_format = "%I:%M%p %a %b %e"
 use_12hr = true
 style = "bg:color_aqua"
-format = '[[  $time ](fg:color_fg0 bg:color_aqua)]($style)'
-
-# ── Prompt ─────────────────────────────────────
+format = '[[ $time ](fg:color_fg0 bg:color_aqua)]($style)'
 
 [fill]
 disabled = false

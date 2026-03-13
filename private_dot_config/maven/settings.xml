@@ -1,0 +1,3 @@
+<settings>
+  <localRepository>${user.home}/.local/share/maven/repository</localRepository>
+</settings>
