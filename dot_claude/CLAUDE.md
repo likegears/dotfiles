@@ -1,0 +1,1 @@
+推送到gitlab时不要有任何gereated with claude 或者 coauthor等
