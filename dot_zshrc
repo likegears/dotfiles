@@ -1,12 +1,24 @@
-# Starship prompt init - auto-detect Nerd Font
-if fc-list 2>/dev/null | grep -qi "nerd" \
-  || [[ -n $(ls ~/Library/Fonts/*erd* /Library/Fonts/*erd* /usr/share/fonts/**/[Nn]erd* 2>/dev/null | head -1) ]] \
-  || [[ "$NERD_FONT" == "1" ]]; then
-  export STARSHIP_CONFIG=~/.config/starship.toml
+# Source shared profile if not already loaded (non-login shells)
+[ -z "$_starship_full" ] && . "$HOME/.profile"
+
+# Shell display: hide platform default shell (macOS=zsh, Linux=bash)
+if [ "$_starship_default_shell" = "zsh" ]; then
+  unset STARSHIP_SHELL_DISPLAY
 else
-  export STARSHIP_CONFIG=~/.config/starship-plain.toml
+  export STARSHIP_SHELL_DISPLAY=" zsh"
 fi
+
+# Starship prompt init + adaptive width switching
 eval "$(starship init zsh)"
+
+_starship_adaptive_prompt() {
+  if (( COLUMNS < 100 )); then
+    export STARSHIP_CONFIG="$_starship_compact"
+  else
+    export STARSHIP_CONFIG="$_starship_full"
+  fi
+}
+precmd_functions+=(_starship_adaptive_prompt)
 
 # run local files
 PATH="$PATH:./"
@@ -20,6 +32,21 @@ export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 # wget XDG alias
 alias wget='wget --hsts-file="$XDG_STATE_HOME/wget/hsts"'
+
+# ── Secrets from 1Password ────────────────────
+[ -f "$XDG_CONFIG_HOME/env.secrets" ] && source "$XDG_CONFIG_HOME/env.secrets"
+
+# ── Zellij auto theme ─────────────────────────
+zj() {
+  local theme
+  if [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]]; then
+    theme="catppuccin-mocha-vivid"
+  else
+    theme="catppuccin-frappe-vivid"
+  fi
+  command zellij options --theme "$theme" 2>/dev/null
+  command zellij "$@"
+}
 
 # Added by Antigravity
 export PATH="/Users/gears/.antigravity/antigravity/bin:$PATH"

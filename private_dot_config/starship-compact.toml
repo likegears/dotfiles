@@ -1,0 +1,187 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Compact fallback for narrow terminals
+# Two-line layout: info on line 1, input on line 2
+# No powerline chrome, no right_format — fits in tight spaces
+
+format = """
+$directory$git_branch$git_status$git_state$c$rust$golang$nodejs$python$lua$package$line_break$status$jobs$cmd_duration$character"""
+
+palette = 'gruvbox_dark'
+
+[palettes.gruvbox_dark]
+color_fg0 = '#fbf1c7'
+color_bg1 = '#3c3836'
+color_bg3 = '#665c54'
+color_blue = '#458588'
+color_aqua = '#689d6a'
+color_green = '#98971a'
+color_orange = '#d65d0e'
+color_purple = '#b16286'
+color_red = '#cc241d'
+color_yellow = '#d79921'
+color_magenta = '#b16286'
+
+# ── Directory ──────────────────────────────────
+
+[directory]
+truncation_length = 4
+truncation_symbol = "\u2026/"
+truncate_to_repo = true
+fish_style_pwd_dir_length = 1
+style = "bold color_yellow"
+format = "[$path ]($style)"
+read_only = " ro"
+read_only_style = "red"
+# ── Git ────────────────────────────────────────
+
+[git_branch]
+truncation_length = 25
+truncation_symbol = "\u2026"
+symbol = ""
+style = "bold color_aqua"
+format = '[$symbol$branch ]($style)'
+
+[git_status]
+style = "color_aqua"
+format = '([$all_status$ahead_behind]($style) )'
+conflicted = "="
+ahead = "[\u21E1](bold green)"
+behind = "[\u21E3](bold red)"
+diverged = "\u21D5"
+up_to_date = "[\u2713](bold green)"
+untracked = "?"
+stashed = "$"
+modified = "!"
+staged = "+"
+renamed = "\u00BB"
+deleted = "[\u2717](bold red)"
+
+[git_state]
+style = "bold yellow"
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+
+# ── Languages (minimal) ───────────────────────
+
+[c]
+symbol = "c"
+style = "color_blue"
+format = '[$symbol $version ]($style)'
+
+[rust]
+symbol = "rs"
+style = "color_blue"
+format = '[$symbol $version ]($style)'
+
+[golang]
+symbol = "go"
+style = "color_blue"
+format = '[$symbol $version ]($style)'
+
+[nodejs]
+symbol = "node"
+style = "color_blue"
+format = '[$symbol $version ]($style)'
+
+[python]
+symbol = "py"
+style = "color_blue"
+format = '[$symbol $version(\($virtualenv\)) ]($style)'
+
+[lua]
+symbol = "lua"
+style = "color_blue"
+format = '[$symbol $version ]($style)'
+
+[package]
+symbol = "pkg"
+style = "color_bg3"
+format = '[$symbol $version ]($style)'
+
+# ── Line 2: status + input ────────────────────
+
+[status]
+disabled = false
+format = '[✗$status ](bold red)'
+
+[jobs]
+disabled = false
+number_threshold = 1
+symbol_threshold = 1
+format = '[&$number ](bold color_aqua)'
+
+[cmd_duration]
+disabled = false
+min_time = 2000
+format = '[$duration ](color_yellow)'
+
+[character]
+disabled = false
+success_symbol = '[❯](bold color_aqua)'
+error_symbol = '[❯](bold color_red)'
+vimcmd_symbol = '[❮](bold color_aqua)'
+vimcmd_replace_one_symbol = '[❮](bold color_purple)'
+vimcmd_replace_symbol = '[❮](bold color_purple)'
+vimcmd_visual_symbol = '[❮](bold color_yellow)'
+
+# ── Disabled modules ──────────────────────────
+
+[fill]
+disabled = true
+
+[os]
+disabled = true
+
+[shell]
+disabled = true
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true
+
+[sudo]
+disabled = true
+
+[battery]
+disabled = true
+
+[memory_usage]
+disabled = true
+
+[time]
+disabled = true
+
+[localip]
+disabled = true
+
+[docker_context]
+disabled = true
+
+[conda]
+disabled = true
+
+[container]
+disabled = true
+
+[line_break]
+disabled = false
+
+[git_commit]
+disabled = true
+
+[git_metrics]
+disabled = true
+
+[php]
+disabled = true
+
+[java]
+disabled = true
+
+[kotlin]
+disabled = true
+
+[haskell]
+disabled = true

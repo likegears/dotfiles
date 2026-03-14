@@ -1,0 +1,84 @@
+[font.normal]
+family = "ComicShannsMono Nerd Font Mono"
+style = "Regular"
+
+[font.bold]
+family = "ComicShannsMono Nerd Font Mono"
+style = "Bold"
+
+[font.italic]
+family = "ComicShannsMono Nerd Font Mono"
+style = "Italic"
+
+[font.bold_italic]
+family = "ComicShannsMono Nerd Font Mono"
+style = "Bold Italic"
+
+[font]
+size = 20.0
+
+[colors.primary]
+background = '#e1e2e7'
+foreground = '#3760bf'
+
+[colors.cursor]
+cursor = '#2e7de9'
+text = '#e1e2e7'
+
+# Normal colors
+[colors.normal]
+black = '#e9e9ed'
+red = '#f52a65'
+green = '#587539'
+yellow = '#8c6c3e'
+blue = '#2e7de9'
+magenta = '#9854f1'
+cyan = '#007197'
+white = '#6172b0'
+
+# Bright colors
+[colors.bright]
+black = '#a1a6c5'
+red = '#f52a65'
+green = '#587539'
+yellow = '#8c6c3e'
+blue = '#2e7de9'
+magenta = '#9854f1'
+cyan = '#007197'
+white = '#3760bf'
+
+# Indexed Colors
+[[colors.indexed_colors]]
+index = 16
+color = '#b15c00'
+
+[[colors.indexed_colors]]
+index = 17
+color = '#c64343'
+
+[window]
+decorations = "Buttonless"
+opacity = 0.5
+blur = true
+padding = { x = 10, y = 10 }
+dynamic_padding = true
+
+[colors.selection]
+text = "CellForeground"   # keep original foreground (preserves Powerline glyphs)
+background = '#99a7df'     # soft lavender highlight for light theme
+
+[selection]
+save_to_clipboard = true
+
+[cursor.style]
+shape = "Beam"
+blinking = "On"
+
+[cursor]
+thickness = 0.2
+unfocused_hollow = true
+blink_interval = 550
+blink_timeout = 0
+
+[mouse]
+hide_when_typing = true

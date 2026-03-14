@@ -4,3 +4,4 @@
 **/*.log
 **/conversations
 **/prompts
+.config/tmux/plugins

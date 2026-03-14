@@ -1,0 +1,14 @@
+[data]
+    name = "likegears"
+    email = "30487484+likegears@users.noreply.github.com"
+    signingkey = "{{ onepasswordRead "op://Private/GitHub Mac air/public key" }}"
+
+[edit]
+    command = "nvim"
+
+[diff]
+    pager = "delta"
+
+[merge]
+    command = "nvim"
+    args = ["-d", "{{ "{{ .Destination }}" }}", "{{ "{{ .Source }}" }}", "{{ "{{ .Target }}" }}"]

@@ -1,14 +1,52 @@
-# auto theme switch
-theme = dark:catppuccin-frappe.conf,light:catppuccin-latte.conf
-# font-family = "ComicShannsMono Nerd Font Mono"
+# ── Theme ─────────────────────────────────────
+# Uses built-in Catppuccin, auto-switches with macOS appearance
+theme = dark:Catppuccin Frappe,light:Catppuccin Latte
+
+# ── Font ──────────────────────────────────────
 font-family = "3720 Nerd Font Mono"
+font-thicken = true
+adjust-cell-height = 25%
+
+# ── Cursor ────────────────────────────────────
+cursor-style = bar
+cursor-style-blink = false
 cursor-opacity = 0.8
-cursor-style = block
-cursor-style-blink = true
-mouse-hide-while-typing = true
+
+# ── Split Panes ──────────────────────────────
+unfocused-split-opacity = 0.65
+split-divider-color = #8caaee
+
+# ── Window ────────────────────────────────────
 background-opacity = 0.6
 background-blur = 20
 macos-titlebar-style = tabs
+window-padding-x = 4
+window-padding-y = 2
+window-padding-balance = true
+confirm-close-surface = false
 
-# Allow Shift+Enter to insert newline
+# ── Quick Terminal ────────────────────────────
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-animation-duration = 0.15
+
+# ── Mouse / Links ────────────────────────────
+mouse-hide-while-typing = true
+link-url = true
+
+# ── Shell Integration ────────────────────────
+shell-integration = zsh
+shell-integration-features = cursor,sudo,title
+
+# ── Clipboard ────────────────────────────────
+copy-on-select = clipboard
+clipboard-paste-protection = false
+
+# ── Scrollback ───────────────────────────────
+scrollback-limit = 50000
+
+# ── Keybinds ─────────────────────────────────
 keybind = shift+enter=text:\x0a
+keybind = super+shift+comma=reload_config
+keybind = page_up=scroll_page_up
+keybind = page_down=scroll_page_down
