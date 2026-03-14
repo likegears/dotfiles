@@ -1,2 +1,5 @@
+# Source shared profile (Nerd Font detection, cargo, etc.)
+[ -f "$HOME/.profile" ] && . "$HOME/.profile"
 
-# cargo env is now loaded from .zshenv via CARGO_HOME
+# Source bashrc for interactive settings
+[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"

@@ -1,1 +1,30 @@
-. "$HOME/.cargo/env"
+# Starship prompt - detect Nerd Font and set config paths
+_starship_has_nerdfont=0
+if command -v fc-list >/dev/null 2>&1 && fc-list 2>/dev/null | grep -qi "nerd"; then
+  _starship_has_nerdfont=1
+elif [ -n "$(ls ~/Library/Fonts/*erd* /Library/Fonts/*erd* 2>/dev/null | head -1)" ]; then
+  _starship_has_nerdfont=1
+elif [ -n "$(ls /usr/share/fonts/*erd* /usr/share/fonts/**/*erd* 2>/dev/null | head -1)" ]; then
+  _starship_has_nerdfont=1
+elif [ -d "/mnt/c/Windows" ] && ls /mnt/c/Users/*/AppData/Local/Microsoft/Windows/Fonts/*erd* 2>/dev/null | head -1 | grep -q .; then
+  _starship_has_nerdfont=1
+elif [ "$NERD_FONT" = "1" ]; then
+  _starship_has_nerdfont=1
+fi
+
+if [ "$_starship_has_nerdfont" = "1" ]; then
+  _starship_full="$HOME/.config/starship.toml"
+else
+  _starship_full="$HOME/.config/starship-plain.toml"
+fi
+_starship_compact="$HOME/.config/starship-compact.toml"
+export STARSHIP_CONFIG="$_starship_full"
+
+# Platform default shell — hide it from prompt (no need to show the obvious)
+case "$(uname -s)" in
+  Darwin)          _starship_default_shell="zsh" ;;
+  MINGW*|MSYS*)    _starship_default_shell="bash" ;;  # Git Bash on Windows
+  *)               _starship_default_shell="bash" ;;
+esac
+
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env" || true
