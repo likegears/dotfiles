@@ -8,17 +8,9 @@ else
   export STARSHIP_SHELL_DISPLAY=" zsh"
 fi
 
-# Starship prompt init + adaptive width switching
+# Starship prompt init
+# STARSHIP_CONFIG is set in .zshenv (nerd font detection by terminal app)
 eval "$(starship init zsh)"
-
-_starship_adaptive_prompt() {
-  if (( COLUMNS < 100 )); then
-    export STARSHIP_CONFIG="$_starship_compact"
-  else
-    export STARSHIP_CONFIG="$_starship_full"
-  fi
-}
-precmd_functions+=(_starship_adaptive_prompt)
 
 # run local files
 PATH="$PATH:./"
@@ -80,12 +72,7 @@ lzd() {
   command lazydocker "$@"
 }
 
-bt() {
-  local f=$(_catppuccin_flavor)
-  sed -i '' "s|color_theme = .*|color_theme = \"$HOME/.config/btop/themes/catppuccin_${f}.theme\"|" \
-    "$HOME/.config/btop/btop.conf"
-  command btop "$@"
-}
+# bt, hx, cot theme switching handled by theme-switch LaunchAgent
 
 # Added by Antigravity
 export PATH="/Users/gears/.antigravity/antigravity/bin:$PATH"

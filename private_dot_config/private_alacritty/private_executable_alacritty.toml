@@ -8,19 +8,19 @@ import = ["~/.config/alacritty/catppuccin-frappe.toml"]
 size = 16.0
 
 [font.normal]
-family = "3720 Nerd Font Mono"
+family = "3270 Nerd Font Mono"
 style = "Regular"
 
 [font.bold]
-family = "3720 Nerd Font Mono"
+family = "3270 Nerd Font Mono"
 style = "Bold"
 
 [font.italic]
-family = "3720 Nerd Font Mono"
+family = "3270 Nerd Font Mono"
 style = "Italic"
 
 [font.bold_italic]
-family = "3720 Nerd Font Mono"
+family = "3270 Nerd Font Mono"
 style = "Bold Italic"
 
 # ── Window ────────────────────────────────────

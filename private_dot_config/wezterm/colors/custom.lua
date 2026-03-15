@@ -32,11 +32,11 @@ local mocha = {
 local colorscheme = {
    foreground = mocha.text,
    background = mocha.base,
-   cursor_bg = mocha.rosewater,
-   cursor_border = mocha.rosewater,
+   cursor_bg = mocha.lavender,
+   cursor_border = mocha.lavender,
    cursor_fg = mocha.crust,
-   selection_bg = mocha.surface2,
-   selection_fg = mocha.text,
+   selection_bg = 'rgba(137, 180, 250, 0.25)', -- mocha.blue at 25% opacity — soft blue tint
+   selection_fg = 'none', -- keep original foreground (preserves Powerline glyphs)
    ansi = {
       '#0C0C0C', -- black
       '#C50F1F', -- red

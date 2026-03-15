@@ -1,54 +1,21 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# Powerline fallback (no Nerd Font required)
-# Same layout as starship.toml but with text-based symbols
+# Plain prompt — NO Nerd Font, NO Powerline symbols
+# Pure ASCII/Unicode for terminals without special fonts
 
 format = """
-[](color_magenta)\
 $os\
-$shell\
-[](bg:color_orange fg:color_magenta)\
-$username\
-$hostname\
-$sudo\
-[](bg:color_yellow fg:color_orange)\
-$directory\
-[](fg:color_yellow bg:color_aqua)\
-$git_branch\
-$git_status\
-$git_commit\
-$git_metrics\
-$git_state\
-[](fg:color_aqua bg:color_blue)\
-$c\
-$rust\
-$golang\
-$nodejs\
-$php\
-$java\
-$kotlin\
-$haskell\
-$python\
-$lua\
-[](fg:color_blue bg:color_bg3)\
-$docker_context\
-$conda\
-$container\
-$package\
-[](fg:color_bg3)\
-$fill\
-[](fg:color_bg3)\
-$status\
-$jobs\
-$localip\
-$battery\
-$memory_usage\
-[](fg:color_blue bg:color_bg3)\
-$cmd_duration\
-[](fg:color_aqua bg:color_blue)\
-$time\
-[ ](fg:color_aqua)\
+${env_var.STARSHIP_SHELL_DISPLAY}\
+ $username$hostname$sudo\
+ $directory\
+ $git_branch$git_status$git_state\
+ $c$rust$golang$nodejs$python$lua\
+ $docker_context$package$gcloud\
 $line_break$character\
+"""
+
+right_format = """
+$status$jobs $cmd_duration $time\
 """
 
 palette = 'gruvbox_dark'
@@ -68,286 +35,132 @@ color_magenta = '#b16286'
 
 [os]
 disabled = false
-style = "bg:color_magenta fg:color_fg0"
+format = '[$symbol]($style)'
+style = "bold color_magenta"
 
 [os.symbols]
-Macos = " macOS"
-Windows = "Win"
-Ubuntu = "Ubuntu"
-SUSE = "SUSE"
-Raspbian = "RPi"
-Mint = "Mint"
-Manjaro = "Manjaro"
-Linux = "Linux"
-NixOS = "NixOS"
-Gentoo = "Gentoo"
-Fedora = "Fedora"
-Alpine = "Alpine"
-Amazon = "AWS"
-Android = "Android"
-Arch = "Arch"
-Artix = "Artix"
-EndeavourOS = "EndOS"
-CentOS = "CentOS"
-Debian = "Debian"
-Redhat = "RHEL"
-RedHatEnterprise = "RHEL"
-Pop = "Pop"
+Macos = "mac"
+Windows = "win"
+Ubuntu = "ubu"
+Linux = "lnx"
+Fedora = "fed"
+Arch = "arc"
+Debian = "deb"
 
-[shell]
-disabled = false
-bash_indicator = 'bash'
-fish_indicator = 'fish'
-zsh_indicator = 'zsh'
-powershell_indicator = 'pwsh'
-cmd_indicator = 'cmd'
-nu_indicator = 'nu'
-tcsh_indicator = 'tcsh'
-xonsh_indicator = 'xsh'
-elvish_indicator = 'elvish'
-style = "bg:color_magenta fg:color_fg0"
-format = '[ $indicator]($style)'
+[env_var.STARSHIP_SHELL_DISPLAY]
+format = '[$env_value](color_magenta)'
 
 [username]
-show_always = true
-style_user = "bg:color_orange fg:color_fg0"
-style_root = "bg:color_orange fg:color_fg0"
-format = '[ $user ]($style)'
-aliases = { "root" = "ROOT" }
+show_always = false
+format = '[$user](bold color_orange)'
 
 [hostname]
 ssh_only = true
-ssh_symbol = "ssh:"
-trim_at = '.'
-detect_env_vars = ['!TMUX', "SSH_CLIENT", "SSH_TTY", "SSH_CONNECTION"]
-format = '[$ssh_symbol$hostname ]($style)'
-style = "bold bg:color_orange fg:color_fg0"
-disabled = false
+ssh_symbol = "@"
+format = '[$ssh_symbol$hostname](bold color_orange)'
 aliases = { "192.168.1.77" = "4090" }
 
 [sudo]
 disabled = false
-symbol = "sudo!"
-style = "bg:color_orange fg:color_fg0"
-format = '[ $symbol ]($style)'
+symbol = "(sudo)"
+format = '[$symbol](bold color_red)'
 
 [directory]
-disabled = false
-truncation_length = 15
-truncation_symbol = "…/"
+truncation_length = 5
+truncation_symbol = ".../"
 truncate_to_repo = true
-read_only = " RO"
-read_only_style = "red"
-style = "fg:color_fg0 bg:color_yellow"
-format = "[ $path ]($style)"
+home_symbol = "~"
+read_only = " ro"
+format = '[$path]($style)[$read_only]($read_only_style)'
+style = "bold color_yellow"
 
 [git_branch]
-truncation_length = 50
-truncation_symbol = "..."
+truncation_length = 30
 symbol = ""
-style = "bg:color_aqua"
-format = '[[ $branch ](fg:color_fg0 bg:color_aqua)]($style)'
+format = '[$branch](color_aqua)'
 
-[git_commit]
-commit_hash_length = 7
-only_detached = true
-tag_disabled = false
-tag_max_candidates = 0
-tag_symbol = "tag:"
-style = "bg:color_aqua"
-format = '[ $tag_symbol$tag \[$hash\] ](fg:color_fg0 bg:color_aqua)'
+[git_status]
+format = '([$all_status$ahead_behind](color_aqua))'
+conflicted = "="
+ahead = "^"
+behind = "v"
+diverged = "<>"
+up_to_date = ""
+untracked = "?"
+stashed = "*"
+modified = "!"
+staged = "+"
+renamed = ">"
+deleted = "x"
 
 [git_state]
 rebase = "REBASING"
 merge = "MERGING"
 revert = "REVERTING"
-cherry_pick = "CHERRY-PICKING"
-bisect = "BISECTING"
-am = "AM"
-am_or_rebase = "AM/REBASE"
-style = "bold yellow bg:color_aqua"
-format = '\([$state( $progress_current/$progress_total)]($style)\)'
-
-[git_metrics]
-disabled = false
-added_style = "bold green bg:color_aqua"
-deleted_style = "bold red bg:color_aqua"
-only_nonzero_diffs = true
-format = '[+$added]($added_style)[/](bg:color_aqua)[-$deleted]($deleted_style)'
-ignore_submodules = true
-
-[git_status]
-style = "bg:color_aqua"
-format = '([\[$all_status$ahead_behind\]]($style))'
-conflicted = "="
-ahead = "[⇡](bold green bg:color_aqua)"
-behind = "[⇣](bold red bg:color_aqua)"
-diverged = "⇕"
-up_to_date = "[✓](bold green bg:color_aqua)"
-untracked = "?"
-stashed = "$"
-modified = "!"
-staged = "+"
-renamed = "»"
-deleted = "[✗](bold red bg:color_aqua)"
-typechanged = ""
-ignore_submodules = false
-disabled = false
+cherry_pick = "CHERRY"
+bisect = "BISECT"
+format = '($state $progress_current/$progress_total)'
 
 [nodejs]
-symbol = "node"
-style = "bg:color_blue"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
+symbol = "node:"
+format = '[$symbol$version](color_blue) '
 
 [c]
-symbol = "C"
-style = "bg:color_blue"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
+symbol = "c:"
+format = '[$symbol$version](color_blue) '
 
 [rust]
-symbol = "rs"
-style = "bg:color_blue"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
+symbol = "rs:"
+format = '[$symbol$version](color_blue) '
 
 [golang]
-symbol = "go"
-style = "bg:color_blue"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
-
-[php]
-symbol = "php"
-style = "bg:color_blue"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
-
-[java]
-symbol = "java"
-style = "bg:color_blue"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
-
-[kotlin]
-symbol = "kt"
-style = "bg:color_blue"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
-
-[haskell]
-symbol = "hs"
-style = "bg:color_blue"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
+symbol = "go:"
+format = '[$symbol$version](color_blue) '
 
 [python]
-symbol = "py"
-style = "bg:color_blue"
-format = '[[ $symbol($version)(\($virtualenv\)) ](fg:color_fg0 bg:color_blue)]($style)'
+symbol = "py:"
+format = '[$symbol$version(\($virtualenv\))](color_blue) '
 
 [lua]
-symbol = "lua"
-style = "bg:color_blue"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
-version_format = 'v${raw}'
-detect_extensions = ['lua']
-detect_files = ['.lua-version']
-detect_folders = ['lua']
-lua_binary = 'lua'
+symbol = "lua:"
+format = '[$symbol$version](color_blue) '
 
 [docker_context]
 symbol = "docker:"
-style = "bg:color_bg3"
-format = '[[ $symbol$context ](fg:#83a598 bg:color_bg3)]($style)'
-
-[conda]
-symbol = "conda:"
-style = "bg:color_bg3"
-format = '[[ $symbol$environment ](fg:#83a598 bg:color_bg3)]($style)'
-
-[container]
-symbol = "ctr:"
-style = "bg:color_bg3"
-format = '[ $symbol$name ]($style)'
+format = '[$symbol$context](color_bg3) '
 
 [package]
 symbol = "pkg:"
-style = "bg:color_bg3"
-format = '[[ $symbol$version ](fg:#83a598 bg:color_bg3)]($style)'
+format = '[$symbol$version](color_bg3) '
+
+[gcloud]
+symbol = "gcp:"
+detect_env_vars = ['GOOGLE_CLOUD_PROJECT', 'GCLOUD_PROJECT', 'CLOUDSDK_ACTIVE_CONFIG_NAME']
+format = '[$symbol$account](color_bg3) '
 
 [status]
 disabled = false
-format = '[ ✗$status ](bold red bg:color_bg3)'
+format = '[$symbol$status](bold red) '
 
 [jobs]
 disabled = false
 number_threshold = 1
-symbol_threshold = 1
-format = '[ &$number ](bold color_aqua bg:color_bg3)'
-
-[localip]
-disabled = false
-ssh_only = true
-format = '[ $localipv4 ](fg:color_fg0 bg:color_bg3)'
-
-[battery]
-disabled = false
-full_symbol = '⚡'
-charging_symbol = '⚡'
-discharging_symbol = '▽'
-unknown_symbol = '?'
-empty_symbol = '!'
-format = '[ $symbol$percentage ](fg:color_fg0 bg:color_bg3)'
-
-[[battery.display]]
-threshold = 10
-style = "bold red bg:color_bg3"
-charging_symbol = '⚡'
-discharging_symbol = '▼'
-
-[[battery.display]]
-threshold = 30
-style = "bold yellow bg:color_bg3"
-charging_symbol = '⚡'
-discharging_symbol = '▽'
-
-[[battery.display]]
-threshold = 60
-style = "bold green bg:color_bg3"
-charging_symbol = '⚡'
-discharging_symbol = '▽'
-
-[[battery.display]]
-threshold = 100
-style = "bold green bg:color_bg3"
-charging_symbol = '⚡'
-discharging_symbol = '▽'
-
-[memory_usage]
-disabled = false
-threshold = 80
-format = '[ ram:${ram} ${ram_pct} ](fg:color_fg0 bg:color_bg3)'
+format = '[&$number](bold color_aqua) '
 
 [cmd_duration]
 disabled = false
 min_time = 2000
-show_notifications = false
-format = '[[ $duration ](fg:color_fg0 bg:color_blue)]($style)'
-style = "bg:color_blue"
+format = '[$duration](color_blue)'
 
 [time]
 disabled = false
-time_format = "%I:%M%p %a %b %e"
-use_12hr = true
-style = "bg:color_aqua"
-format = '[[ $time ](fg:color_fg0 bg:color_aqua)]($style)'
-
-[fill]
-disabled = false
-symbol = " "
+time_format = "%H:%M"
+format = ' [$time](color_aqua)'
 
 [line_break]
 disabled = false
 
 [character]
-disabled = false
-success_symbol = '[❯](bold fg:color_aqua)'
-error_symbol = '[❯](bold fg:color_red)'
-vimcmd_symbol = '[❮](bold fg:color_aqua)'
-vimcmd_replace_one_symbol = '[❮](bold fg:color_purple)'
-vimcmd_replace_symbol = '[❮](bold fg:color_purple)'
-vimcmd_visual_symbol = '[❮](bold fg:color_yellow)'
+success_symbol = '[>](bold color_aqua)'
+error_symbol = '[>](bold color_red)'
+vimcmd_symbol = '[<](bold color_aqua)'

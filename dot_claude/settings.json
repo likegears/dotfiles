@@ -8,14 +8,19 @@
     "pr": " "
   },
   "permissions": {
-    "allow": [
-      "Bash(which starship:*)",
-      "Bash(pmset -g batt)",
-      "Bash(starship module:*)",
-      "Bash(du -sh /Users/gears/*/ 2>/dev/null | sort -rh | head -30)",
-      "Bash(du -sh /Users/gears/.*/ 2>/dev/null | sort -rh | head -30)"
-    ],
     "defaultMode": "default"
+  },
+  "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before compacting, review this conversation and extract valuable knowledge. Apply these rules:\n\n1. **User preferences, habits, feedback** → Save to auto memory system (memory files)\n2. **Project-specific conventions, architecture decisions, code patterns** → Append to the project's CLAUDE.md (create if needed)\n3. **Reusable workflows or multi-step patterns that would help in future sessions** → Consider noting them for potential skill creation\n4. **Temporary, one-off, or already-documented information** → Skip, do not save\n\nBe selective — only save things that would genuinely be useful in future sessions. Do not duplicate what already exists in memory or CLAUDE.md."
+          }
+        ]
+      }
+    ]
   },
   "statusLine": {
     "type": "command",
@@ -28,14 +33,14 @@
     "context7@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "learning-output-style@claude-plugins-official": true,
-    "serena@claude-plugins-official": true,
+    "learning-output-style@claude-plugins-official": false,
+    "serena@claude-plugins-official": false,
     "code-review@claude-plugins-official": true,
     "gitlab@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": false,
+    "pyright-lsp@claude-plugins-official": false,
+    "clangd-lsp@claude-plugins-official": false,
     "superpowers@claude-plugins-official": true,
     "superpowers@superpowers-marketplace": true,
     "plugin-dev@claude-plugins-official": true,
@@ -54,16 +59,22 @@
     "agent-sdk-dev@claude-plugins-official": true,
     "playground@claude-plugins-official": true,
     "linear@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": false,
     "sentry@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": false,
     "huggingface-skills@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": false,
     "double-shot-latte@superpowers-marketplace": true,
     "figma@claude-plugins-official": true,
-    "greptile@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true
+    "greptile@claude-plugins-official": false,
+    "lua-lsp@claude-plugins-official": false,
+    "github@claude-plugins-official": false,
+    "hookify@claude-plugins-official": true,
+    "csharp-lsp@claude-plugins-official": false,
+    "php-lsp@claude-plugins-official": false,
+    "jdtls-lsp@claude-plugins-official": false
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high"
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true
 }

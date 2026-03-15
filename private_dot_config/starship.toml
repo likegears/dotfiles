@@ -4,22 +4,22 @@
 # Right side mirrors left side color flow for visual symmetry
 
 format = """
-[](color_magenta)\
+[](color_magenta)\
 $os\
-$shell\
-[](bg:color_orange fg:color_magenta)\
+${env_var.STARSHIP_SHELL_DISPLAY}\
+[](bg:color_orange fg:color_magenta)\
 $username\
 $hostname\
 $sudo\
-[](bg:color_yellow fg:color_orange)\
+[](bg:color_yellow fg:color_orange)\
 $directory\
-[](fg:color_yellow bg:color_aqua)\
+[](fg:color_yellow bg:color_aqua)\
 $git_branch\
 $git_status\
 $git_commit\
 $git_metrics\
 $git_state\
-[](fg:color_aqua bg:color_blue)\
+[](fg:color_aqua bg:color_blue)\
 $c\
 $rust\
 $golang\
@@ -30,43 +30,63 @@ $kotlin\
 $haskell\
 $python\
 $lua\
-[](fg:color_blue bg:color_bg3)\
+[](fg:color_blue bg:color_bg3)\
 $docker_context\
 $conda\
 $container\
 $package\
-[](fg:color_bg3)\
-$fill\
-[](fg:color_bg3)\
-$status\
-$jobs\
-$localip\
-$battery\
-$memory_usage\
-[](fg:color_blue bg:color_bg3)\
-$cmd_duration\
-[](fg:color_aqua bg:color_blue)\
-$time\
-[ ](fg:color_aqua)\
+$kubernetes\
+$aws\
+$gcloud\
+[](fg:color_bg3)\
 $line_break$character\
 """
 
-palette = 'gruvbox_dark'
+right_format = """
+[](fg:color_bg3)\
+$status\
+$jobs\
+$localip\
+[](fg:color_blue bg:color_bg3)\
+$battery\
+[](fg:color_aqua bg:color_blue)\
+$memory_usage\
+[](fg:color_yellow bg:color_aqua)\
+${custom.cpu}\
+[](fg:color_orange bg:color_yellow)\
+$cmd_duration\
+[](fg:color_magenta bg:color_orange)\
+$time\
+[](fg:color_magenta)\
+"""
 
-# Catppuccin palettes: https://github.com/catppuccin/starship
+palette = 'catppuccin_mocha'
 
-[palettes.gruvbox_dark]
-color_fg0 = '#fbf1c7'
-color_bg1 = '#3c3836'
-color_bg3 = '#665c54'
-color_blue = '#458588'
-color_aqua = '#689d6a'
-color_green = '#98971a'
-color_orange = '#d65d0e'
-color_purple = '#b16286'
-color_red = '#cc241d'
-color_yellow = '#d79921'
-color_magenta = '#b16286'
+[palettes.catppuccin_mocha]
+color_fg0 = '#1e1e2e'
+color_bg1 = '#585b70'
+color_bg3 = '#6c7086'
+color_blue = '#89b4fa'
+color_aqua = '#94e2d5'
+color_green = '#a6e3a1'
+color_orange = '#fab387'
+color_purple = '#cba6f7'
+color_red = '#f38ba8'
+color_yellow = '#f9e2af'
+color_magenta = '#f5c2e7'
+
+[palettes.catppuccin_frappe]
+color_fg0 = '#232634'
+color_bg1 = '#626880'
+color_bg3 = '#737994'
+color_blue = '#8caaee'
+color_aqua = '#81c8be'
+color_green = '#a6d189'
+color_orange = '#ef9f76'
+color_purple = '#ca9ee6'
+color_red = '#e78284'
+color_yellow = '#e5c890'
+color_magenta = '#f4b8e4'
 
 # ── OS & Shell ─────────────────────────────────
 
@@ -77,29 +97,29 @@ style = "bg:color_magenta fg:color_fg0"
 [os.symbols]
 Windows = "󰍲 "
 Ubuntu = "󰕈 "
-SUSE = " "
+SUSE = " "
 Raspbian = "󰐿 "
 Mint = "󰣭 "
-Macos = "󰀵 macOS"
-Manjaro = " "
+Macos = "󰀵 "
+Manjaro = " "
 Linux = "󰌽"
-NixOS = " "
+NixOS = " "
 Gentoo = "󰣨 "
 Fedora = "󰣛 "
-Alpine = " "
-Amazon = ""
-Android = ""
+Alpine = " "
+Amazon = ""
+Android = ""
 Arch = "󰣇"
 Artix = "󰣇"
-EndeavourOS = " "
-CentOS = " "
+EndeavourOS = " "
+CentOS = " "
 Debian = "󰣚"
 Redhat = "󱄛"
 RedHatEnterprise = "󱄛 "
-Pop = " "
+Pop = " "
 
 [shell]
-disabled = false
+disabled = true
 bash_indicator = ' bsh'
 fish_indicator = ' fsh'
 zsh_indicator = ' zsh'
@@ -112,10 +132,15 @@ elvish_indicator = ' evsh'
 style = "bg:color_magenta fg:color_fg0"
 format = '[$indicator]($style)'
 
+
+[env_var.STARSHIP_SHELL_DISPLAY]
+style = "bg:color_magenta fg:color_fg0"
+format = '[$env_value]($style)'
+
 # ── User & Host ────────────────────────────────
 
 [username]
-show_always = true
+show_always = false
 style_user = "bg:color_orange fg:color_fg0"
 style_root = "bg:color_orange fg:color_fg0"
 format = '[ $user ]($style)'
@@ -123,7 +148,7 @@ aliases = { "root" = "sudo" }
 
 [hostname]
 ssh_only = true
-ssh_symbol = " "
+ssh_symbol = " "
 trim_at = '.'
 detect_env_vars = ['!TMUX', "SSH_CLIENT", "SSH_TTY", "SSH_CONNECTION"]
 format = '[$ssh_symbol$hostname ]($style)'
@@ -133,7 +158,7 @@ aliases = { "192.168.1.77" = "4090" }
 
 [sudo]
 disabled = false
-symbol = " "
+symbol = " "
 style = "bg:color_orange fg:color_fg0"
 format = '[$symbol]($style)'
 
@@ -141,31 +166,23 @@ format = '[$symbol]($style)'
 
 [directory]
 disabled = false
-truncation_length = 15
+truncation_length = 5
 truncation_symbol = "…/"
 truncate_to_repo = true
-read_only = " "
+fish_style_pwd_dir_length = 1
+home_symbol = "󰋜"
+read_only = " "
 read_only_style = "red"
 style = "fg:color_fg0 bg:color_yellow"
 format = "[ $path ]($style)"
 
-[directory.substitutions]
-"root" = " "
-".config" = " "
-"~" = "󰋜 "
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = "󰝚 "
-"Pictures" = " "
-"Developer" = "󰲋 "
-"Projects" = "󰀚 "
 
 # ── Git ────────────────────────────────────────
 
 [git_branch]
-truncation_length = 50
-truncation_symbol = ""
-symbol = ""
+truncation_length = 30
+truncation_symbol = "…"
+symbol = ""
 style = "bg:color_aqua"
 format = '[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)'
 
@@ -173,8 +190,8 @@ format = '[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)'
 commit_hash_length = 7
 only_detached = true
 tag_disabled = false
-tag_max_candidates = 0
-tag_symbol = " "
+tag_max_candidates = 10
+tag_symbol = " "
 style = "bg:color_aqua"
 format = '[$tag_symbol $tag \[$hash\]]($style)'
 
@@ -191,7 +208,7 @@ format = '\([$state( $progress_current/$progress_total)]($style)\)'
 
 [git_metrics]
 disabled = false
-added_style = "bold green bg:color_aqua"
+added_style = "bold color_fg0 bg:color_aqua"
 deleted_style = "bold red bg:color_aqua"
 only_nonzero_diffs = true
 format = '[+$added]($added_style)[/](bg:color_aqua)[-$deleted]($deleted_style)'
@@ -201,81 +218,80 @@ ignore_submodules = true
 style = "bg:color_aqua"
 format = '([\[$all_status$ahead_behind\]]($style))'
 conflicted = "="
-ahead = "[⇡](bold green bg:color_aqua)"
+ahead = "[⇡](bold color_fg0 bg:color_aqua)"
 behind = "[⇣](bold red bg:color_aqua)"
 diverged = "[⇕]"
-up_to_date = "[✓](bold green bg:color_aqua)"
+up_to_date = "[✓](bold color_fg0 bg:color_aqua)"
 untracked = "?"
-stashed = "$"
+stashed = "*"
 modified = "!"
 staged = "+"
 renamed = "»"
 deleted = "[✘](bold red bg:color_aqua)"
 typechanged = ""
-ignore_submodules = false
+ignore_submodules = true
 disabled = false
 
 # ── Languages ──────────────────────────────────
 
 [nodejs]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [c]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [rust]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [golang]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [php]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [java]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [kotlin]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [haskell]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [python]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version)(\($virtualenv\)) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [lua]
-symbol = " "
+symbol = " "
 style = "bg:color_blue"
 format = '[[ $symbol($version) ](fg:color_fg0 bg:color_blue)]($style)'
 version_format = 'v${raw}'
 detect_extensions = ['lua']
 detect_files = ['.lua-version']
-detect_folders = ['lua']
 lua_binary = 'lua'
 
 # ── Containers & Packages ─────────────────────
 
 [docker_context]
-symbol = " "
+symbol = " "
 style = "bg:color_bg3"
 format = '[[ $symbol($context) ](fg:#83a598 bg:color_bg3)]($style)'
 
@@ -284,7 +300,7 @@ style = "bg:color_bg3"
 format = '[[ $symbol($environment) ](fg:#83a598 bg:color_bg3)]($style)'
 
 [container]
-symbol = " "
+symbol = " "
 style = "bg:color_bg3"
 format = '[$symbol \[$name\]]($style) '
 
@@ -293,16 +309,46 @@ symbol = "󰏗 "
 style = "bg:color_bg3"
 format = '[[ $symbol$version ](fg:#83a598 bg:color_bg3)]($style)'
 
+
+[kubernetes]
+disabled = false
+symbol = "󱃾 "
+style = "bg:color_bg3"
+format = '[[ $symbol$context(:$namespace) ](fg:#83a598 bg:color_bg3)]($style)'
+detect_folders = ['charts', 'helmfile.d']
+detect_files = ['helmfile.yaml', 'Chart.yaml']
+detect_env_vars = ['KUBECONFIG']
+
+[aws]
+disabled = false
+symbol = "󰸏 "
+style = "bg:color_bg3"
+format = '[[ $symbol$profile($region) ](fg:#83a598 bg:color_bg3)]($style)'
+
+[gcloud]
+disabled = false
+detect_env_vars = ['GOOGLE_CLOUD_PROJECT', 'GCLOUD_PROJECT', 'CLOUDSDK_ACTIVE_CONFIG_NAME']
+symbol = "󱇶 "
+style = "bg:color_bg3"
+format = '[[ $symbol$project ](fg:#83a598 bg:color_bg3)]($style)'
+
 # ── Right side: bg3 segment (system status) ───
 
 [status]
 disabled = false
-format = '[ $symbol$status ](bold red bg:color_bg3)'
-symbol = ' '
+map_symbol = false
+recognize_signal_code = true
+pipestatus = true
+symbol = '󰅗 '
+not_found_symbol = '󰍉 '
+not_executable_symbol = '󰌧 '
+sigint_symbol = '󰜺 '
+signal_symbol = '󱐋 '
+format = '[ $symbol$common_meaning$signal_name$maybe_int ](bold red bg:color_bg3)'
 
 [jobs]
 disabled = false
-symbol = '󰜎 '
+symbol = '󰜞 '
 number_threshold = 1
 symbol_threshold = 1
 format = '[ $symbol$number ](bold color_aqua bg:color_bg3)'
@@ -319,60 +365,52 @@ charging_symbol = '󰂄 '
 discharging_symbol = '󰂃 '
 unknown_symbol = '󰂑 '
 empty_symbol = '󰂎 '
-format = '[ $symbol$percentage ](fg:color_fg0 bg:color_bg3)'
+format = '[$symbol$percentage ](fg:color_fg0 bg:color_blue)'
 
 [[battery.display]]
-threshold = 10
-style = "bold red bg:color_bg3"
-charging_symbol = '󰢜 '
+threshold = 20
+style = "bold red bg:color_blue"
 discharging_symbol = '󰁺 '
 
 [[battery.display]]
-threshold = 30
-style = "bold yellow bg:color_bg3"
-charging_symbol = '󰂇 '
-discharging_symbol = '󰁼 '
-
-[[battery.display]]
-threshold = 60
-style = "bold green bg:color_bg3"
-charging_symbol = '󰂉 '
-discharging_symbol = '󰁿 '
-
-[[battery.display]]
 threshold = 100
-style = "bold green bg:color_bg3"
-charging_symbol = '󰂄 '
-discharging_symbol = '󰂂 '
+style = "fg:color_fg0 bg:color_blue"
 
 [memory_usage]
 disabled = false
-threshold = 80
-format = '[ $symbol${ram} ${ram_pct} ](fg:color_fg0 bg:color_bg3)'
-symbol = ' '
+threshold = 0
+symbol = '󰍛 '
+format = '[$symbol${ram_pct} ](fg:color_fg0 bg:color_aqua)'
+
+[custom.cpu]
+command = "ps -A -o %cpu | awk '{s+=$1} END {printf \"%.0f%%\", s/4}'"
+when = true
+symbol = '󰘚 '
+format = '[$symbol($output) ](fg:color_fg0 bg:color_yellow)'
+
 
 # ── Right side: blue segment (timing) ─────────
 
 [cmd_duration]
 disabled = false
 min_time = 2000
+show_milliseconds = true
 show_notifications = false
-format = '[[ $duration ](fg:color_fg0 bg:color_blue)]($style)'
-style = "bg:color_blue"
+format = '[[ $duration ](fg:color_fg0 bg:color_orange)]($style)'
+style = "bg:color_orange"
 
 # ── Right side: aqua segment (clock) ──────────
 
 [time]
 disabled = false
-time_format = "%I:%M%p %a %b %e"
-use_12hr = true
-style = "bg:color_aqua"
-format = '[[  $time ](fg:color_fg0 bg:color_aqua)]($style)'
+time_format = "%H:%M"
+style = "bg:color_magenta"
+format = '[[  $time ](fg:color_fg0 bg:color_magenta)]($style)'
 
 # ── Prompt ─────────────────────────────────────
 
 [fill]
-disabled = false
+disabled = true
 symbol = " "
 
 [line_break]
@@ -380,9 +418,9 @@ disabled = false
 
 [character]
 disabled = false
-success_symbol = '[❯](bold fg:color_aqua)'
-error_symbol = '[❯](bold fg:color_red)'
-vimcmd_symbol = '[❮](bold fg:color_aqua)'
-vimcmd_replace_one_symbol = '[❮](bold fg:color_purple)'
-vimcmd_replace_symbol = '[❮](bold fg:color_purple)'
-vimcmd_visual_symbol = '[❮](bold fg:color_yellow)'
+success_symbol = '[󰄛 ](bold fg:color_aqua)'
+error_symbol = '[󰄛 ](bold fg:color_red)'
+vimcmd_symbol = '[](bold fg:color_aqua)'
+vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
+vimcmd_replace_symbol = '[](bold fg:color_purple)'
+vimcmd_visual_symbol = '[](bold fg:color_yellow)'

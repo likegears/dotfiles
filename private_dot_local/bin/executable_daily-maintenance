@@ -1,0 +1,68 @@
+#!/bin/bash
+# Daily maintenance — brew upgrade + bookmark sync + future tasks
+set -euo pipefail
+
+LOG="/tmp/daily-maintenance.log"
+echo "========================================" >> "$LOG"
+echo "$(date): Starting daily maintenance" >> "$LOG"
+
+# ── 1. Brew update & upgrade ──
+
+/opt/homebrew/bin/brew update >> "$LOG" 2>&1
+
+OUTDATED_CASKS=$(/opt/homebrew/bin/brew outdated --greedy --cask --quiet 2>/dev/null || true)
+
+/opt/homebrew/bin/brew upgrade --greedy >> "$LOG" 2>&1
+/opt/homebrew/bin/brew cleanup >> "$LOG" 2>&1
+
+# Mac App Store updates
+echo "$(date): Checking Mac App Store updates" >> "$LOG"
+MAS_OUTDATED=$(/opt/homebrew/bin/mas outdated 2>/dev/null || true)
+if [ -n "$MAS_OUTDATED" ]; then
+  echo "$MAS_OUTDATED" >> "$LOG"
+  /opt/homebrew/bin/mas upgrade >> "$LOG" 2>&1 || true
+fi
+
+# Find updated apps that are currently running
+if [ -n "$OUTDATED_CASKS" ]; then
+  RESTART_LIST=""
+  RESTART_APPS=""
+  for cask in $OUTDATED_CASKS; do
+    APP=$(/opt/homebrew/bin/brew info --cask "$cask" 2>/dev/null | grep -o '/Applications/.*\.app' | head -1)
+    [ -z "$APP" ] && continue
+    APP_NAME=$(basename "$APP" .app)
+    if pgrep -xq "$APP_NAME" 2>/dev/null; then
+      RESTART_LIST="$RESTART_LIST\n• $APP_NAME"
+      RESTART_APPS="$RESTART_APPS|$APP"
+    fi
+  done
+
+  if [ -n "$RESTART_APPS" ]; then
+    # Ask user to confirm restart
+    CHOICE=$(osascript -e "
+      display alert \"Brew Upgrade Complete\" message \"These updated apps are running:${RESTART_LIST}\n\nRestart them now?\" buttons {\"Later\", \"Restart All\"} default button \"Restart All\" giving up after 300
+      button returned of result
+    " 2>/dev/null || echo "Later")
+
+    if [ "$CHOICE" = "Restart All" ]; then
+      IFS='|'
+      for APP in $RESTART_APPS; do
+        [ -z "$APP" ] && continue
+        APP_NAME=$(basename "$APP" .app)
+        echo "$(date): Restarting $APP_NAME" >> "$LOG"
+        osascript -e "tell application \"$APP_NAME\" to quit" 2>/dev/null || true
+        sleep 2
+        open "$APP" 2>/dev/null || true
+      done
+      unset IFS
+    fi
+  else
+    osascript -e "display notification \"Updated: $OUTDATED_CASKS\" with title \"Brew Upgrade\"" 2>/dev/null
+  fi
+fi
+
+# ── 2. Sync Vivaldi bookmarks to Safari ──
+echo "$(date): Syncing Vivaldi bookmarks to Safari" >> "$LOG"
+/usr/bin/python3 /Users/gears/Scripts/vivaldi_to_safari.py >> "$LOG" 2>&1 || true
+
+echo "$(date): Done" >> "$LOG"

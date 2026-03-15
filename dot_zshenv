@@ -39,5 +39,25 @@ export MAVEN_OPTS="-Dmaven.user.settings=$XDG_CONFIG_HOME/maven/settings.xml $MA
 # ── Matplotlib ────────────────────────────────
 export MPLCONFIGDIR="$XDG_CONFIG_HOME/matplotlib"
 
+# ── Starship ─────────────────────────────────
+# Set default config early; .zshrc adaptive prompt may override
+case "$TERM_PROGRAM" in
+  ghostty|WezTerm|iTerm.app)
+    export STARSHIP_CONFIG="$HOME/.config/starship.toml" ;;
+  *)
+    case "$TERM" in
+      alacritty|xterm-kitty)
+        export STARSHIP_CONFIG="$HOME/.config/starship.toml" ;;
+      *)
+        export STARSHIP_CONFIG="$HOME/.config/starship-plain.toml" ;;
+    esac ;;
+esac
+
+# ── Homebrew ─────────────────────────────────
+export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_AUTO_UPDATE_SECS=86400
+export HOMEBREW_AUTOREMOVE=1
+export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
+
 # ── Claude Code ─────────────────────────────
 export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=70

@@ -1,0 +1,64 @@
+#!/bin/bash
+# Unified theme switcher — detects macOS appearance and switches all tools
+# Usage: theme-switch [dark|light]  (auto-detect if no argument)
+
+set -euo pipefail
+
+if [ -n "${1:-}" ]; then
+  MODE="$1"
+else
+  if [ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" = "Dark" ]; then
+    MODE="dark"
+  else
+    MODE="light"
+  fi
+fi
+
+case "$MODE" in
+  dark)
+    GHOSTTY_DEPTH="frappe"      # terminal bg
+    STARSHIP_PALETTE="catppuccin_mocha"  # one level deeper
+    ZELLIJ_THEME="catppuccin-mocha-vivid"
+    ALACRITTY_THEME="catppuccin-frappe.toml"
+    CATPPUCCIN_FLAVOR="frappe"
+    FZF_COLORS="--color=bg+:#414559,spinner:#f2d5cf,hl:#e78284 --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf --color=marker:#babbf1,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284 --color=border:#8caaee"
+    ;;
+  light)
+    GHOSTTY_DEPTH="latte"
+    STARSHIP_PALETTE="catppuccin_frappe"
+    ZELLIJ_THEME="catppuccin-frappe-vivid"
+    ALACRITTY_THEME="catppuccin-latte.toml"
+    CATPPUCCIN_FLAVOR="latte"
+    FZF_COLORS="--color=bg+:#ccd0da,spinner:#dc8a78,hl:#d20f39 --color=fg:#4c4f69,header:#d20f39,info:#8839ef,pointer:#dc8a78 --color=marker:#7287fd,fg+:#4c4f69,prompt:#8839ef,hl+:#d20f39 --color=border:#1e66f5"
+    ;;
+  *)
+    echo "Usage: theme-switch [dark|light]"
+    exit 1
+    ;;
+esac
+
+# ── Starship ──────────────────────────────────
+sed -i '' "s/^palette = .*/palette = '$STARSHIP_PALETTE'/" "$HOME/.config/starship.toml"
+
+# ── Alacritty ─────────────────────────────────
+sed -i '' "s|import = .*|import = [\"~/.config/alacritty/$ALACRITTY_THEME\"]|" "$HOME/.config/alacritty/alacritty.toml"
+
+# ── btop ──────────────────────────────────────
+sed -i '' "s|color_theme = .*|color_theme = \"$HOME/.config/btop/themes/catppuccin_${CATPPUCCIN_FLAVOR}.theme\"|" "$HOME/.config/btop/btop.conf" 2>/dev/null || true
+
+# ── Helix ─────────────────────────────────────
+sed -i '' "s/^theme = .*/theme = \"catppuccin_${CATPPUCCIN_FLAVOR}\"/" "$HOME/.config/helix/config.toml" 2>/dev/null || true
+
+# ── CotEditor ─────────────────────────────────
+defaults write com.coteditor.CotEditor defaultTheme -string "catppuccin-${CATPPUCCIN_FLAVOR}" 2>/dev/null || true
+
+# ── tmux (if running) ─────────────────────────
+if command -v tmux &>/dev/null && tmux list-sessions &>/dev/null; then
+  tmux set -g @catppuccin_flavor "$CATPPUCCIN_FLAVOR"
+  tmux run-shell ~/.config/tmux/plugins/tmux/catppuccin.tmux 2>/dev/null || true
+fi
+
+# ── Zellij (config only, applies on next launch) ──
+sed -i '' "s/^theme .*/theme \"$ZELLIJ_THEME\"/" "$HOME/.config/zellij/config.kdl" 2>/dev/null || true
+
+echo "Switched to $MODE (catppuccin $CATPPUCCIN_FLAVOR + starship $STARSHIP_PALETTE)"

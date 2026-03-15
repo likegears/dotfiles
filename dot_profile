@@ -1,23 +1,27 @@
-# Starship prompt - detect Nerd Font and set config paths
+# Starship prompt - detect Nerd Font by terminal app
+# Terminals we configure with Nerd Font: Ghostty, Alacritty, WezTerm, Zed, iTerm2, kitty
+# Terminal.app and others: assume no Nerd Font
 _starship_has_nerdfont=0
-if command -v fc-list >/dev/null 2>&1 && fc-list 2>/dev/null | grep -qi "nerd"; then
-  _starship_has_nerdfont=1
-elif [ -n "$(ls ~/Library/Fonts/*erd* /Library/Fonts/*erd* 2>/dev/null | head -1)" ]; then
-  _starship_has_nerdfont=1
-elif [ -n "$(ls /usr/share/fonts/*erd* /usr/share/fonts/**/*erd* 2>/dev/null | head -1)" ]; then
-  _starship_has_nerdfont=1
-elif [ -d "/mnt/c/Windows" ] && ls /mnt/c/Users/*/AppData/Local/Microsoft/Windows/Fonts/*erd* 2>/dev/null | head -1 | grep -q .; then
-  _starship_has_nerdfont=1
-elif [ "$NERD_FONT" = "1" ]; then
-  _starship_has_nerdfont=1
-fi
+case "$TERM_PROGRAM" in
+  ghostty|WezTerm|iTerm.app) _starship_has_nerdfont=1 ;;
+  *)
+    # Alacritty sets TERM=alacritty, kitty sets TERM=xterm-kitty
+    case "$TERM" in
+      alacritty|xterm-kitty) _starship_has_nerdfont=1 ;;
+    esac
+    ;;
+esac
+# Manual override
+[ "$NERD_FONT" = "1" ] && _starship_has_nerdfont=1
+[ "$NERD_FONT" = "0" ] && _starship_has_nerdfont=0
 
 if [ "$_starship_has_nerdfont" = "1" ]; then
   _starship_full="$HOME/.config/starship.toml"
+  _starship_compact="$HOME/.config/starship-compact.toml"
 else
   _starship_full="$HOME/.config/starship-plain.toml"
+  _starship_compact="$HOME/.config/starship-plain.toml"
 fi
-_starship_compact="$HOME/.config/starship-compact.toml"
 export STARSHIP_CONFIG="$_starship_full"
 
 # Platform default shell — hide it from prompt (no need to show the obvious)

@@ -1,78 +1,76 @@
-// Zed settings
-//
-// For information on how to configure Zed, see the Zed
-// documentation: https://zed.dev/docs/configuring-zed
-//
-// To see all of Zed's default settings without changing your
-// custom settings, run `zed: open default settings` from the
-// command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "git_panel": {
-    "tree_view": true
+  // ── Theme ─────────────────────────────────────
+  "edit_predictions": {
+    "provider": "zed"
   },
-  "ssh_connections": [
-    {
-      "host": "ai",
-      "projects": [
-        {
-          "paths": [
-            "/"
-          ]
-        },
-        {
-          "paths": [
-            "/home/long"
-          ]
-        },
-        {
-          "paths": [
-            "/home/long/workspace"
-          ]
-        },
-        {
-          "paths": [
-            "/home/long/workspace/validation/CLAUDE.md"
-          ]
-        }
-      ],
-      "upload_binary_over_ssh": true
+  "agent_servers": {
+    "gemini": {
+      "type": "registry"
     }
-  ],
+  },
+  "theme": {
+    "mode": "system",
+    "light": "Catppuccin Latte (Blur)",
+    "dark": "Catppuccin Mocha (Blur)"
+  },
   "icon_theme": {
     "mode": "system",
     "light": "Catppuccin Latte",
     "dark": "Catppuccin Mocha"
   },
 
+  // ── Font ──────────────────────────────────────
+  "buffer_font_family": "3270 Nerd Font Mono",
+  "buffer_font_size": 13.0,
+  "buffer_font_fallbacks": ["ZedMono Nerd Font"],
+  "ui_font_size": 14,
+
+  // ── Editor ────────────────────────────────────
+  "vim_mode": true,
+  "autosave": { "after_delay": { "milliseconds": 1000 } },
+  "format_on_save": "on",
+  "indent_guides": {
+    "enabled": true,
+    "active_line_width": 1,
+    "coloring": "indent_aware",
+    "background_coloring": "indent_aware"
+  },
+  "inlay_hints": { "enabled": true },
+  "scroll_beyond_last_line": "one_page",
+  "relative_line_numbers": "enabled",
+  "cursor_blink": true,
+  "show_whitespaces": "boundary",
+
+  // ── Git ───────────────────────────────────────
+  "git_panel": { "tree_view": true },
+  "git": { "inline_blame": { "enabled": true } },
+
+  // ── Terminal ──────────────────────────────────
+  "terminal": {
+    "font_family": "3270 Nerd Font Mono",
+    "font_size": 13,
+    "line_height": "comfortable",
+    "blinking": "on",
+    "copy_on_select": true
+  },
+
+  // ── Agent ─────────────────────────────────────
   "agent": {
     "default_model": {
-      "provider": "copilot_chat",
-      "model": "claude-3-7-sonnet"
-    },
-  },
-  "features": {
-    "edit_prediction_provider": "zed"
-  },
-  "vim_mode": true,
-  "ui_font_size": 16,
-  "buffer_font_size": 12.0,
-  "buffer_font_fallbacks": ["ZedMono Nerd Font"],
-
-  "terminal": {
-    "line_height": "standard"
-  },
-
-  "theme": {
-    "mode": "system",
-    "light": "Catppuccin Latte (Blur)",
-    "dark": "Catppuccin Mocha (Blur)",
-
-    "indent_guides": {
-      "enabled": true,
-      "active_line_width": 1,
-      "coloring": "indent_aware",
-      "background_coloring": "indent_aware",
-      "line_width": 1
+      "provider": "zed.dev",
+      "model": "claude-sonnet-4-5"
     }
-  }
+  },
+
+  // ── SSH ───────────────────────────────────────
+  "ssh_connections": [
+    {
+      "host": "ai",
+      "projects": [
+        { "paths": ["/home/long"] },
+        { "paths": ["/home/long/workspace"] }
+      ],
+      "upload_binary_over_ssh": true
+    }
+  ]
 }

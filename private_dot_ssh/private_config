@@ -1,28 +1,18 @@
-{{- /* 1Password SSH agent socket path per OS */ -}}
-{{- $opAgent := "" -}}
-{{- if eq .chezmoi.os "darwin" -}}
-{{-   $opAgent = "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" -}}
-{{- else if eq .chezmoi.os "linux" -}}
-{{-   $opAgent = "~/.1password/agent.sock" -}}
-{{- else if eq .chezmoi.os "windows" -}}
-{{-   $opAgent = "//./pipe/openssh-ssh-agent" -}}
-{{- end }}
-{{ if eq .chezmoi.os "darwin" -}}
+
 Include ~/.orbstack/ssh/config
 
-{{ end -}}
 # ── Git Hosting ──────────────────────────────
 
 Host github.com
 	User git
 	IdentityFile ~/.local/share/ssh/1password/jhkfyppiwejxno2dxq6ppck25e.pub
-	IdentityAgent "{{ $opAgent }}"
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 Host gitea.likegears.com
 	User git
 	Port 33233
 	IdentityFile ~/.local/share/ssh/1password/dm5cz4tpjemtqbyk4hylgeachi.pub
-	IdentityAgent "{{ $opAgent }}"
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 # ── Servers ──────────────────────────────────
 
@@ -32,14 +22,14 @@ Host 77
 	Port 22
 	IdentityFile ~/.local/share/ssh/1password/j3dy2wtgzk7siko3plyovbmto4.pub
 	ForwardAgent yes
-	IdentityAgent "{{ $opAgent }}"
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 Host ai
 	User long
 	HostName 192.168.1.129
 	Port 22
 	IdentityFile ~/.local/share/ssh/1password/j3dy2wtgzk7siko3plyovbmto4.pub
-	IdentityAgent "{{ $opAgent }}"
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 	ForwardAgent yes
 
 Host rootai
@@ -47,27 +37,27 @@ Host rootai
 	HostName 192.168.1.129
 	Port 22
 	IdentityFile ~/.local/share/ssh/1password/j3dy2wtgzk7siko3plyovbmto4.pub
-	IdentityAgent "{{ $opAgent }}"
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 	ForwardAgent yes
 
 Host hkdmit
 	User root
 	HostName 103.117.101.44
 	IdentityFile ~/.local/share/ssh/1password/uv7tkrd6jgfkbmiohksbyavg4u.pub
-	IdentityAgent "{{ $opAgent }}"
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
-Host macmini-LA
+Host Macmini
 	User gears
-	HostName Longs-Mac-mini.local
+	HostName 192.168.0.69
 	IdentityFile ~/.local/share/ssh/1password/tsist5cht2hiqxhp6dcl5svjvy.pub
-	IdentityAgent "{{ $opAgent }}"
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 Host 192.168.1.88
 	User git
 	PreferredAuthentications publickey
 	IdentitiesOnly yes
 	IdentityFile ~/.local/share/ssh/1password/2wldcbuyhiehbojkwbiuibkpcy.pub
-	IdentityAgent "{{ $opAgent }}"
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 Host openclaw
 	User root
@@ -79,3 +69,5 @@ Host openclaw
 Host *
 	IdentityAgent none
 	IdentitiesOnly yes
+	ServerAliveInterval 30
+	ServerAliveCountMax 10

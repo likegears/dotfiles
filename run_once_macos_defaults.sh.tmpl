@@ -1,0 +1,65 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# macOS app defaults — runs once on chezmoi apply
+
+# ── TextEdit (always present on macOS) ───────
+defaults write com.apple.TextEdit RichText -int 0
+defaults write com.apple.TextEdit PlainTextEncoding -int 4
+defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+defaults write com.apple.TextEdit NSNavPanelExpandedStateForSaveMode -bool true
+defaults write com.apple.TextEdit SmartQuotes -bool false
+defaults write com.apple.TextEdit SmartDashes -bool false
+defaults write com.apple.TextEdit CorrectSpellingAutomatically -int 0
+defaults write com.apple.TextEdit TextReplacement -int 0
+defaults write com.apple.TextEdit CheckSpellingWhileTyping -int 0
+defaults write com.apple.TextEdit ShowRuler -int 0
+defaults write com.apple.TextEdit TabWidth -int 4
+defaults write com.apple.TextEdit NSFixedPitchFont -string "3270NFM"
+defaults write com.apple.TextEdit NSFixedPitchFontSize -int 14
+
+# ── Terminal.app (always present on macOS) ───
+defaults write com.apple.Terminal SecureKeyboardEntry -bool true
+defaults write com.apple.Terminal StringEncodings -array 4
+
+if ! /usr/libexec/PlistBuddy -c "Print ':Window Settings:Catppuccin-Frappe:name'" ~/Library/Preferences/com.apple.Terminal.plist &>/dev/null; then
+  curl -sL "https://raw.githubusercontent.com/catppuccin/terminal.app/main/themes/Catppuccin-Frappe.terminal" -o /tmp/Catppuccin-Frappe.terminal
+  curl -sL "https://raw.githubusercontent.com/catppuccin/terminal.app/main/themes/Catppuccin-Latte.terminal" -o /tmp/Catppuccin-Latte.terminal
+  open /tmp/Catppuccin-Frappe.terminal
+  open /tmp/Catppuccin-Latte.terminal
+  sleep 2
+fi
+defaults write com.apple.Terminal "Default Window Settings" -string "Catppuccin-Frappe"
+defaults write com.apple.Terminal "Startup Window Settings" -string "Catppuccin-Frappe"
+
+# ── CotEditor ────────────────────────────────
+if [ -d "/Applications/CotEditor.app" ]; then
+  defaults write com.coteditor.CotEditor appearance -int 0
+  defaults write com.coteditor.CotEditor pinsThemeAppearance -int 0
+  defaults write com.coteditor.CotEditor lineHeight -float 1.2
+  swift -e '
+  import AppKit
+  let d = UserDefaults(suiteName: "com.coteditor.CotEditor")!
+  if let font = NSFont(name: "3270NFM", size: 14) {
+      let data = try! NSKeyedArchiver.archivedData(withRootObject: font, requiringSecureCoding: false)
+      d.set(data, forKey: "font")
+      d.set(data, forKey: "monospacedFont")
+      d.synchronize()
+  }
+  ' 2>/dev/null
+fi
+
+# ── Touch ID for sudo ────────────────────────
+if [ ! -f /etc/pam.d/sudo_local ] || ! grep -q pam_tid /etc/pam.d/sudo_local 2>/dev/null; then
+  sudo sh -c 'cat > /etc/pam.d/sudo_local << EOF
+# sudo_local: local config file which survives system update and is included for sudo
+auth       sufficient     pam_tid.so
+EOF'
+fi
+
+# ── TPM (tmux plugin manager) ────────────────
+if command -v tmux &>/dev/null && [ ! -d "$HOME/.config/tmux/plugins/tpm" ]; then
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.config/tmux/plugins/tpm"
+  "$HOME/.config/tmux/plugins/tpm/bin/install_plugins"
+fi
+
+{{ end -}}

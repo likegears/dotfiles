@@ -4,9 +4,9 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 [user]
-	name = {{ .name }}
-	email = {{ .email }}
-	signingkey = {{ .signingkey }}
+	name = likegears
+	email = 30487484+likegears@users.noreply.github.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJcSG8auMblfNMTCNEXiaJNBTlohup6py8vnvyNTY2rI
 [gpg]
 	format = ssh
 [gpg "ssh"]
@@ -15,3 +15,5 @@
 	gpgsign = true
 [core]
 	editor = nvim
+[credential]
+	helper =

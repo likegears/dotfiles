@@ -8,13 +8,14 @@ font-thicken = true
 adjust-cell-height = 25%
 
 # ── Cursor ────────────────────────────────────
-cursor-style = bar
-cursor-style-blink = false
-cursor-opacity = 0.8
+cursor-style = block
+cursor-style-blink = true
+cursor-opacity = 0.7
+# cursor-color: let theme provide (Frappe=#f2d5cf, Latte=#dc8a78)
 
 # ── Split Panes ──────────────────────────────
 unfocused-split-opacity = 0.65
-split-divider-color = #8caaee
+# split-divider-color: let theme palette derive
 
 # ── Window ────────────────────────────────────
 background-opacity = 0.6
@@ -37,6 +38,11 @@ link-url = true
 # ── Shell Integration ────────────────────────
 shell-integration = zsh
 shell-integration-features = cursor,sudo,title
+
+# ── Selection ────────────────────────────────
+# Let theme provide appropriate colors per variant:
+#   Frappe: fg=#c6d0f5 bg=#626880
+#   Latte:  fg=#4c4f69 bg=#acb0be
 
 # ── Clipboard ────────────────────────────────
 copy-on-select = clipboard

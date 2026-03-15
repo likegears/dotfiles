@@ -13,10 +13,11 @@ return {
 
    -- cursor
    animation_fps = 120,
-   cursor_blink_ease_in = 'EaseOut',
+   cursor_blink_ease_in = 'EaseIn',
    cursor_blink_ease_out = 'EaseOut',
-   default_cursor_style = 'BlinkingBlock',
-   cursor_blink_rate = 650,
+   default_cursor_style = 'BlinkingBar',
+   cursor_blink_rate = 550,
+   cursor_thickness = '2px',
 
    -- color scheme
    colors = colors,
