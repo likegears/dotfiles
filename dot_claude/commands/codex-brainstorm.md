@@ -1,9 +1,9 @@
 ---
-allowed-tools: mcp__codex__codex, mcp__codex__codex-reply, Bash, Read, Glob, Grep
-description: Brainstorm architecture decisions with Codex
+allowed-tools: Bash, Read, Glob, Grep, Agent
+description: Multi-model brainstorm using Codex CLI + Gemini CLI
 user-invocable: true
 ---
 
-Run the codex-brainstorm skill. Discuss the given topic or design question with Codex MCP to get a multi-model perspective. Present trade-offs and a recommendation.
+Run the codex-brainstorm skill. Send the design question to both `codex exec` and `gemini -p` via CLI in parallel. Synthesize perspectives from Claude, Codex, and Gemini into a comparison table with a final recommendation.
 
-Topic to discuss: $ARGUMENTS
+Topic: $ARGUMENTS

@@ -1,56 +1,77 @@
 ---
 name: codex-brainstorm
 description: |
-  Use Codex MCP to brainstorm and discuss architecture decisions. Invoke when:
-  - User asks to "discuss with codex", "ask codex", "codex opinion"
+  Use Codex CLI and Gemini CLI to brainstorm and discuss architecture decisions. Invoke when:
+  - User asks to "discuss with codex", "ask gemini", "multi-model opinion"
   - User says "/codex-brainstorm" or "/codex-discuss"
   - Facing a complex design decision that benefits from multi-model perspective
   - Need to evaluate trade-offs for architecture, API design, or tech stack choices
 
-  This skill creates a collaborative discussion between Claude and Codex to
-  explore design alternatives and reach better decisions.
+  Calls both Codex and Gemini via CLI (no MCP dependency), so it works in any
+  session and multiple sessions can use it simultaneously.
 ---
 
-# Codex Brainstorm / Architecture Discussion
-
-Use the Codex MCP server to have a collaborative design discussion.
+# Multi-Model Brainstorm (Codex + Gemini CLI)
 
 ## Workflow
 
-1. **Frame the problem**: Clearly define the design question, constraints, and goals.
+1. **Frame the problem**: Prepare a clear prompt with constraints and context.
 
-2. **Get Codex's perspective**: Call the `codex` MCP tool with a prompt that:
-   - Describes the problem and constraints
-   - Asks for 2-3 alternative approaches
-   - Requests trade-off analysis for each
+2. **Call both models in parallel** via Bash:
 
-3. **Multi-turn discussion** (if needed): Use `codex-reply` to follow up on specific points, ask Codex to elaborate on an approach, or challenge assumptions.
-
-4. **Synthesize**: Present a comparison table to the user:
-   - Claude's recommended approach + reasoning
-   - Codex's recommended approach + reasoning
-   - Where they agree / disagree
-   - Final recommendation with rationale
-
-## Prompt Template for Codex
-
-```
-I'm designing [FEATURE/SYSTEM]. Here are the constraints:
+### Codex CLI:
+```bash
+cd <project_dir> && codex exec "I'm designing [FEATURE]. Constraints:
 - [constraint 1]
 - [constraint 2]
 
-Current codebase uses: [relevant tech/patterns]
+Current codebase uses: [tech/patterns]
 
-Please propose 2-3 approaches with trade-offs for each:
-1. Performance implications
+Propose 2-3 approaches with trade-offs:
+1. Performance
 2. Maintainability
 3. Complexity
 4. Alignment with existing patterns
 
-Which approach do you recommend and why?
+Which do you recommend and why?" 2>&1
 ```
 
+### Gemini CLI:
+```bash
+cd <project_dir> && gemini -p "I'm designing [FEATURE]. Constraints:
+- [constraint 1]
+- [constraint 2]
+
+Current codebase uses: [tech/patterns]
+
+Propose 2-3 approaches with trade-offs:
+1. Performance
+2. Maintainability
+3. Complexity
+4. Alignment with existing patterns
+
+Which do you recommend and why?" 2>&1
+```
+
+3. **Run both in parallel**: Use the Agent tool to dispatch two subagents, one for each model, then synthesize.
+
+4. **Synthesize**: Present a comparison table:
+
+| Aspect | Claude | Codex | Gemini |
+|--------|--------|-------|--------|
+| Recommended approach | ... | ... | ... |
+| Key reasoning | ... | ... | ... |
+| Unique insight | ... | ... | ... |
+
+Then provide a final recommendation based on consensus or strongest reasoning.
+
 ## Tips
-- Share relevant code snippets from the codebase so Codex has context
-- Use `codex-reply` for follow-up questions — threads maintain conversation state
-- When models disagree, ask each to critique the other's approach
+- Include relevant code snippets in the prompt so models have context
+- If models disagree, have Claude evaluate each argument on technical merit
+- For follow-up, you can run another round with more specific questions
+- `codex exec` and `gemini -p` are both non-interactive — safe for subagent use
+
+## Key Flags
+- `codex exec "<prompt>"` — non-interactive execution
+- `gemini -p "<prompt>"` — non-interactive headless mode
+- `gemini -y -p "<prompt>"` — auto-approve actions (if gemini needs tool use)

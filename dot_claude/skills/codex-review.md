@@ -1,53 +1,61 @@
 ---
 name: codex-review
 description: |
-  Use Codex MCP to perform code review. Invoke when:
+  Use Codex CLI and Gemini CLI for multi-model code review. Invoke when:
   - User asks for code review, PR review, or quality check
-  - User says "/codex-review", "codex review", "let codex review"
+  - User says "/codex-review", "codex review", "multi-model review"
   - After completing a significant code change that needs a second opinion
 
-  This skill leverages OpenAI Codex as an independent reviewer to catch issues
-  Claude might miss, providing a multi-model review perspective.
+  Calls both Codex and Gemini via CLI (no MCP dependency), so it works in any
+  session and multiple sessions can use it simultaneously.
 ---
 
-# Codex Code Review
-
-You have access to the Codex MCP server. Use it to get an independent code review from Codex.
+# Multi-Model Code Review (Codex + Gemini CLI)
 
 ## Workflow
 
-1. **Gather context**: Identify the files that were changed. Use `git diff` or read the relevant files.
+1. **Gather context**: Get the diff and relevant files.
 
-2. **Prepare the review prompt**: Build a detailed prompt that includes:
-   - The code diff or full file contents
-   - The purpose of the changes
-   - Any project conventions from CLAUDE.md
-
-3. **Call Codex MCP**: Use the `codex` MCP tool with:
-   - `prompt`: A review request with the code context
-   - `approval-policy`: "on-failure"
-   - `cwd`: The current project directory
-
-4. **Synthesize**: Combine Codex's findings with your own analysis. Present a unified review that:
-   - Highlights issues both models agree on (high confidence)
-   - Notes issues only one model found (worth investigating)
-   - Skips trivial style differences
-
-## Prompt Template for Codex
-
+```bash
+git diff HEAD~1 > /tmp/review_diff.txt
+# or for unstaged changes:
+git diff > /tmp/review_diff.txt
 ```
-Review the following code changes for:
+
+2. **Call both models in parallel** via Bash:
+
+### Codex CLI (has built-in review command):
+```bash
+cd <project_dir> && codex review --uncommitted "Focus on bugs, security, and performance. Skip trivial style." 2>&1
+```
+Or with a custom diff:
+```bash
+cd <project_dir> && codex exec "Review this diff for bugs, logic errors, security issues, and performance problems. Skip style comments.
+
+$(cat /tmp/review_diff.txt)" 2>&1
+```
+
+### Gemini CLI:
+```bash
+cd <project_dir> && gemini -p "You are a senior code reviewer. Review the following diff for:
 1. Bugs, logic errors, edge cases
 2. Security vulnerabilities
 3. Performance issues
 4. Adherence to project conventions
 
-Focus on actionable issues. Skip trivial style comments.
+Focus on actionable issues only. Skip trivial style comments.
 
-[CODE DIFF / FILES HERE]
+$(cat /tmp/review_diff.txt)" 2>&1
 ```
 
-## Important
-- Always read the code first before sending to Codex
-- Include sufficient context (imports, related functions) for meaningful review
-- If Codex and Claude disagree, present both perspectives to the user
+3. **Run both in parallel**: Use the Agent tool to dispatch two subagents, one calling Codex and one calling Gemini, then synthesize.
+
+4. **Synthesize**: Present a unified review:
+   - Issues all models agree on (high confidence)
+   - Issues only one model found (worth investigating)
+   - Claude's own assessment
+
+## Key Flags
+- `codex review --uncommitted` — review all local changes
+- `codex exec "<prompt>"` — non-interactive, returns result to stdout
+- `gemini -p "<prompt>"` — non-interactive headless mode
