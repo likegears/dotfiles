@@ -61,7 +61,15 @@ if [ -n "$OUTDATED_CASKS" ]; then
   fi
 fi
 
-# ── 2. Sync Vivaldi bookmarks to Safari ──
+# ── 2. Export Brewfile & mas list to chezmoi ──
+CHEZMOI_SRC="$HOME/.local/share/chezmoi"
+if [ -d "$CHEZMOI_SRC" ]; then
+  echo "$(date): Exporting Brewfile and mas list" >> "$LOG"
+  /opt/homebrew/bin/brew bundle dump --describe --force --file="$CHEZMOI_SRC/Brewfile" >> "$LOG" 2>&1 || true
+  /opt/homebrew/bin/mas list | sort -t' ' -k2 > "$CHEZMOI_SRC/Masfile" 2>> "$LOG" || true
+fi
+
+# ── 3. Sync Vivaldi bookmarks to Safari ──
 echo "$(date): Syncing Vivaldi bookmarks to Safari" >> "$LOG"
 /usr/bin/python3 "$HOME/Scripts/vivaldi_to_safari.py" >> "$LOG" 2>&1 || true
 

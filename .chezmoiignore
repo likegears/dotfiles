@@ -113,3 +113,7 @@ Library/**
 {{ else if not (stat (joinPath .chezmoi.homeDir "Library/Rime")) }}
 Library/Rime/**
 {{ end }}
+
+# Package lists (reference only, not deployed)
+Brewfile
+Masfile
