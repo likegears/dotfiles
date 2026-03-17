@@ -1,97 +1,184 @@
 # Dotfiles (chezmoi)
 
-## Quick Start
+Cross-platform dotfiles managed by [chezmoi](https://chezmoi.io). Supports **macOS** (primary), **WSL/Linux**, and partial **Windows** via WSL.
+
+## Setup
+
+### New Machine (macOS / WSL / Linux)
 
 ```bash
-chezmoi init --apply <repo-url>   # New machine
-chezmoi apply                     # Sync all
-chezmoi apply ~/.config/lazygit   # Sync one module
-chezmoi diff ~/.config/nvim       # Preview changes
-chezmoi add ~/.config/ghostty     # Update source after editing
+# 1. Install chezmoi + apply dotfiles
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply likegears
+
+# 2. Install packages (macOS only)
+brew bundle install --file=~/.local/share/chezmoi/Brewfile
+
+# 3. Install App Store apps (macOS only)
+awk '{print $1}' ~/.local/share/chezmoi/Masfile | xargs mas install
 ```
+
+### Daily Operations
+
+```bash
+chezmoi apply                     # Sync all configs to $HOME
+chezmoi apply ~/.config/ghostty   # Sync single module
+chezmoi diff                      # Preview pending changes
+chezmoi add ~/.config/ghostty     # Capture local edits to source
+chezmoi re-add                    # Re-add all changed managed files
+```
+
+## Cross-Platform Strategy
+
+| Layer | Mechanism | Files |
+|-------|-----------|-------|
+| **Static configs** | chezmoi templates (`.tmpl`) | ssh/config, git/config, btop.conf |
+| **Shell RCs** | Runtime `$OSTYPE` / `uname` checks | zshrc, bashrc, fish, nushell |
+| **macOS-only files** | `.chezmoiignore` with `{{ .chezmoi.os }}` | Library/, LaunchAgents, Rime |
+| **Software detection** | `lookPath` in `.chezmoiignore` | Skip configs for uninstalled tools |
+
+### What changes per platform
+
+| Item | macOS | WSL / Linux |
+|------|-------|-------------|
+| 1Password SSH socket | `~/Library/Group Containers/.../agent.sock` | `~/.1password/agent.sock` |
+| Git signing program | `/Applications/1Password.app/.../op-ssh-sign` | `/opt/1Password/op-ssh-sign` |
+| Homebrew | `/opt/homebrew/bin/brew` | `/home/linuxbrew/.linuxbrew/bin/brew` or system |
+| Theme detection | `defaults read -g AppleInterfaceStyle` | Defaults to "frappe" (dark) |
+| LaunchAgents, Rime | Deployed | Skipped via `.chezmoiignore` |
 
 ## Modules
 
 ### Terminals
 
-| Module | Path | Sync command |
-|--------|------|-------------|
-| Ghostty | `~/.config/ghostty` | `chezmoi apply ~/.config/ghostty` |
-| WezTerm | `~/.config/wezterm` | `chezmoi apply ~/.config/wezterm` |
-| Alacritty | `~/.config/alacritty` | `chezmoi apply ~/.config/alacritty` |
+| Module | Path | Template |
+|--------|------|----------|
+| Ghostty | `~/.config/ghostty` | plain |
+| WezTerm | `~/.config/wezterm` | plain (runtime `find_shell()` for cross-platform) |
+| Alacritty | `~/.config/alacritty` | plain |
 
 ### Editors
 
-| Module | Path | Sync command |
-|--------|------|-------------|
-| Neovim | `~/.config/nvim` | `chezmoi apply ~/.config/nvim` |
-| Helix | `~/.config/helix` | `chezmoi apply ~/.config/helix` |
-| Zed | `~/.config/zed` | `chezmoi apply ~/.config/zed` |
+| Module | Path |
+|--------|------|
+| Neovim (LazyVim) | `~/.config/nvim` |
+| Helix | `~/.config/helix` |
+| Zed | `~/.config/zed` |
 
-### Prompt & Shells
+### Shells & Prompt
 
-| Module | Path | Sync command |
-|--------|------|-------------|
-| Starship | `~/.config/starship.toml` `starship-compact.toml` `starship-plain.toml` | `chezmoi apply ~/.config/starship*` |
-| Zsh | `~/.zshrc` `~/.zshenv` `~/.zprofile` | `chezmoi apply ~/.zshrc ~/.zshenv ~/.zprofile` |
-| Bash | `~/.bashrc` `~/.bash_profile` `~/.profile` | `chezmoi apply ~/.bashrc ~/.bash_profile ~/.profile` |
-| Fish | `~/.config/fish` | `chezmoi apply ~/.config/fish` |
-| Nushell | `~/.config/nushell` | `chezmoi apply ~/.config/nushell` |
+| Module | Files | Cross-platform |
+|--------|-------|----------------|
+| Zsh | `.zshrc`, `.zshenv`, `.zprofile` | `$OSTYPE` guards for macOS-specific code |
+| Bash | `.bashrc`, `.bash_profile`, `.profile` | Same `$OSTYPE` guards |
+| Fish | `~/.config/fish` | `uname` guards |
+| Nushell | `~/.config/nushell` | `sys host` guards |
+| Starship | `starship.toml`, `starship-compact.toml`, `starship-plain.toml` | Auto font detection per terminal |
 
 ### Multiplexers
 
-| Module | Path | Sync command |
-|--------|------|-------------|
-| tmux | `~/.config/tmux` | `chezmoi apply ~/.config/tmux` |
-| Zellij | `~/.config/zellij` | `chezmoi apply ~/.config/zellij` |
+| Module | Path |
+|--------|------|
+| tmux | `~/.config/tmux` (plugins via TPM, not chezmoi) |
+| Zellij | `~/.config/zellij` |
 
 ### TUI Tools
 
-| Module | Path | Sync command |
-|--------|------|-------------|
-| lazygit | `~/.config/lazygit` | `chezmoi apply ~/.config/lazygit` |
-| lazydocker | `~/.config/lazydocker` | `chezmoi apply ~/.config/lazydocker` |
-| Yazi | `~/.config/yazi` | `chezmoi apply ~/.config/yazi` |
-| btop | `~/.config/btop` | `chezmoi apply ~/.config/btop` |
+| Module | Path |
+|--------|------|
+| lazygit | `~/.config/lazygit` |
+| lazydocker | `~/.config/lazydocker` |
+| Yazi | `~/.config/yazi` |
+| btop | `~/.config/btop` (template: `{{ .chezmoi.homeDir }}` for theme path) |
 
-### Dev Tools
+### Dev & Security
 
-| Module | Path | Sync command |
-|--------|------|-------------|
-| Git | `~/.config/git` | `chezmoi apply ~/.config/git` |
-| GitHub CLI | `~/.config/gh` | `chezmoi apply ~/.config/gh` |
-| Maven | `~/.config/maven` | `chezmoi apply ~/.config/maven` |
+| Module | Path | Template |
+|--------|------|----------|
+| Git | `~/.config/git` | `.tmpl` (gpg.ssh.program per OS) |
+| SSH | `~/.ssh` | `.tmpl` (IdentityAgent per OS, OrbStack macOS-only) |
+| GitHub CLI | `~/.config/gh` | plain |
 
-### Apps & System
+### AI Coding Tools
 
-| Module | Path | Sync command |
-|--------|------|-------------|
-| Claude Code | `~/.claude` | `chezmoi apply ~/.claude` |
-| SSH | `~/.ssh` | `chezmoi apply ~/.ssh` |
-| Rime | `~/Library/Rime` | `chezmoi apply ~/Library/Rime` |
-| catppuccin-watcher | `~/.local/bin/catppuccin-watcher*` | `chezmoi apply ~/.local/bin` |
-| LaunchAgent | `~/Library/LaunchAgents` | `chezmoi apply ~/Library/LaunchAgents` |
+| Module | Path | Contents |
+|--------|------|----------|
+| Claude Code | `~/.claude` | settings, agents, skills, commands, statusline |
+| Codex skills | `~/.claude/skills/codex-*.md` | review, brainstorm, debug, implement (CLI-based) |
+| Codex commands | `~/.claude/commands/codex-*.md` | Slash commands: `/codex-review`, `/codex-brainstorm`, etc. |
+
+### macOS Only
+
+| Module | Path | Ignored on Linux |
+|--------|------|-----------------|
+| LaunchAgents | `~/Library/LaunchAgents` | Yes |
+| Rime (Squirrel) | `~/Library/Rime` | Yes |
+| catppuccin-watcher | `~/.local/bin/catppuccin-watcher*` | Yes |
+| daily-maintenance | `~/.local/bin/daily-maintenance` | Runs but macOS-specific tasks skipped |
+
+### Scripts
+
+| Script | Path | Purpose |
+|--------|------|---------|
+| daily-maintenance | `~/.local/bin/daily-maintenance` | brew/mas upgrade, Brewfile export, bookmark sync, chezmoi auto-push |
+| vivaldi_to_safari | `~/Scripts/vivaldi_to_safari.py` | Sync Vivaldi bookmarks to Safari |
+| theme-switch | `~/.local/bin/theme-switch` | Manual Catppuccin theme toggle |
+
+### Package Lists (reference, not deployed)
+
+| File | Generated by | Purpose |
+|------|-------------|---------|
+| `Brewfile` | `brew bundle dump` | Restore all Homebrew packages |
+| `Masfile` | `mas list` | Restore all App Store apps |
+
+Auto-exported daily by `daily-maintenance` and committed to git.
 
 ## Theme System (Catppuccin)
 
-All tools auto-switch between **Frappe** (dark) and **Latte** (light):
+All tools auto-switch between **Frappe** (dark) and **Latte** (light) based on macOS appearance. On Linux, defaults to Frappe.
 
 | Tool | Mechanism |
 |------|-----------|
-| Ghostty | Built-in `dark:/light:` |
+| Ghostty | Built-in `dark:/light:` theme syntax |
 | Yazi, Neovim | Terminal background detection (OSC) |
 | tmux | `client-focus-in` hook |
-| fzf | `FZF_DEFAULT_OPTS` env var at shell startup |
+| fzf | `FZF_DEFAULT_OPTS` set at shell startup |
 | CotEditor, Helix, btop | LaunchAgent (`catppuccin-watcher`) |
-| lazygit, lazydocker | Shell wrapper (`lg`, `lzd`) |
+| lazygit, lazydocker | Shell wrapper functions (`lg`, `lzd`) |
+| Zellij | Shell wrapper function (`zj`) |
+| Alacritty | `theme-switch.sh` |
 
-## Conditional Install
+## Automation (daily-maintenance)
 
-`.chezmoiignore` skips configs for software not installed (`lookPath`).
-`run_once_macos_defaults.sh.tmpl` guards all commands with existence checks.
+Runs daily at 9:00 via LaunchAgent `com.user.daily-maintenance.plist`:
 
-## Notes
+```
+1. brew update & upgrade (formulae + casks individually with timeout)
+2. mas upgrade (App Store)
+3. Export Brewfile + Masfile to chezmoi source
+4. Sync Vivaldi bookmarks → Safari
+5. Auto git commit & push chezmoi changes to origin + gitea
+```
 
-- tmux plugins managed by TPM, not chezmoi (`run_once_` installs TPM on new machines)
-- `~/.config/env.secrets` contains 1Password-sourced secrets
-- Compiled binary `catppuccin-watcher` is recompiled from `.swift` source via `run_once_`
+## Template Files
+
+These files use chezmoi Go templates (`{{ }}`) for per-OS values:
+
+| File | Templated values |
+|------|-----------------|
+| `.ssh/config` | `IdentityAgent` path, OrbStack include |
+| `.config/git/config` | `gpg.ssh.program` path |
+| `.config/btop/btop.conf` | `color_theme` absolute path |
+| `.config/env.secrets` | 1Password secret references |
+| `.config/nushell/env.secrets.nu` | 1Password secret references |
+| `run_once_macos_defaults.sh` | macOS system preferences (runs once) |
+
+## Secrets
+
+Managed via 1Password CLI (`op`). Template files (`.tmpl`) use `onepasswordRead` to fetch secrets at `chezmoi apply` time. Secrets are never committed to git.
+
+## Remotes
+
+| Remote | URL |
+|--------|-----|
+| origin | `git@github.com:likegears/dotfiles.git` |
+| gitea | `ssh://git@gitea.likegears.com:33233/likegears/dotfiles.git` |
