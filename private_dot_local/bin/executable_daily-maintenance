@@ -73,4 +73,16 @@ fi
 echo "$(date): Syncing Vivaldi bookmarks to Safari" >> "$LOG"
 /usr/bin/python3 "$HOME/Scripts/vivaldi_to_safari.py" >> "$LOG" 2>&1 || true
 
+# ── 4. Auto commit & push chezmoi changes ──
+if [ -d "$CHEZMOI_SRC" ]; then
+  cd "$CHEZMOI_SRC"
+  if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+    echo "$(date): Committing chezmoi changes" >> "$LOG"
+    git add -A >> "$LOG" 2>&1
+    git commit -m "daily: auto-sync $(date +%Y-%m-%d)" >> "$LOG" 2>&1 || true
+    git push origin main >> "$LOG" 2>&1 || true
+    git push gitea main >> "$LOG" 2>&1 || true
+  fi
+fi
+
 echo "$(date): Done" >> "$LOG"
