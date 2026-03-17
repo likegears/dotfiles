@@ -1,5 +1,9 @@
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
 ## direnv hook
 eval "$(direnv hook zsh)"
@@ -8,12 +12,10 @@ eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
 
 # Added by Toolbox App
-export PATH="$PATH:/Users/gears/Library/Application Support/JetBrains/Toolbox/scripts"
-
+[ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ] && export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
 
 # Added by OrbStack: command-line tools and integration
-# This won't be added again if you remove it.
-source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+[ -f ~/.orbstack/shell/init.zsh ] && source ~/.orbstack/shell/init.zsh 2>/dev/null
 
 # Added by Obsidian
-export PATH="$PATH:/System/Volumes/Data/Applications/Obsidian.app/Contents/MacOS"
+[ -d "/System/Volumes/Data/Applications/Obsidian.app" ] && export PATH="$PATH:/System/Volumes/Data/Applications/Obsidian.app/Contents/MacOS"

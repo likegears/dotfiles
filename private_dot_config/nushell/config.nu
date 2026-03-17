@@ -16,11 +16,11 @@ alias cc = claude --dangerously-skip-permissions
 
 # ── Catppuccin flavor detection ───────────────
 def _catppuccin_flavor [] {
-    let result = (do { ^defaults read -g AppleInterfaceStyle } | complete)
-    if $result.exit_code == 0 and ($result.stdout | str trim) == "Dark" {
-        "frappe"
+    if (sys host | get name) == "Darwin" {
+        let result = (do { ^defaults read -g AppleInterfaceStyle } | complete)
+        if $result.exit_code == 0 and ($result.stdout | str trim) == "Dark" { "frappe" } else { "latte" }
     } else {
-        "latte"
+        "frappe"
     }
 }
 
@@ -37,11 +37,15 @@ _set_fzf_theme
 
 # ── Zellij with auto theme ───────────────────
 def --wrapped zj [...args] {
-    let result = (do { ^defaults read -g AppleInterfaceStyle } | complete)
-    let theme = if $result.exit_code == 0 and ($result.stdout | str trim) == "Dark" {
-        "catppuccin-mocha-vivid"
+    let theme = if (sys host | get name) == "Darwin" {
+        let result = (do { ^defaults read -g AppleInterfaceStyle } | complete)
+        if $result.exit_code == 0 and ($result.stdout | str trim) == "Dark" {
+            "catppuccin-mocha-vivid"
+        } else {
+            "catppuccin-frappe-vivid"
+        }
     } else {
-        "catppuccin-frappe-vivid"
+        "catppuccin-mocha-vivid"
     }
     do { ^zellij options --theme $theme } | complete | ignore
     ^zellij ...$args
@@ -65,7 +69,11 @@ def --wrapped lzd [...args] {
 # ── btop with auto theme ─────────────────────
 def --wrapped bt [...args] {
     let f = (_catppuccin_flavor)
-    ^sed -i '' $'s|color_theme = .*|color_theme = "($env.HOME)/.config/btop/themes/catppuccin_($f).theme"|' $"($env.HOME)/.config/btop/btop.conf"
+    if (sys host | get name) == "Darwin" {
+        ^sed -i '' $'s|color_theme = .*|color_theme = "($env.HOME)/.config/btop/themes/catppuccin_($f).theme"|' $"($env.HOME)/.config/btop/btop.conf"
+    } else {
+        ^sed -i $'s|color_theme = .*|color_theme = "($env.HOME)/.config/btop/themes/catppuccin_($f).theme"|' $"($env.HOME)/.config/btop/btop.conf"
+    }
     ^btop ...$args
 }
 

@@ -39,21 +39,32 @@ $env.EDITOR = "nvim"
 $env.VISUAL = "zed"
 
 # ── SSH (1Password) ──────────────────────────
-$env.SSH_AUTH_SOCK = ($env.HOME | path join "Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock")
+if (sys host | get name) == "Darwin" {
+    $env.SSH_AUTH_SOCK = ($env.HOME | path join "Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock")
+} else {
+    $env.SSH_AUTH_SOCK = ($env.HOME | path join ".1password/agent.sock")
+}
 
 # ── PATH ──────────────────────────────────────
 use std/util "path add"
 path add ($env.CARGO_HOME | path join "bin")
 path add ($env.BUN_INSTALL | path join "bin")
 path add $env.PNPM_HOME
-path add "/opt/homebrew/bin"
-path add "/opt/homebrew/sbin"
+if ("/opt/homebrew/bin" | path exists) { path add "/opt/homebrew/bin" }
+if ("/opt/homebrew/sbin" | path exists) { path add "/opt/homebrew/sbin" }
 path add ($env.HOME | path join ".local/bin")
-path add "/opt/homebrew/opt/mysql-client/bin"
+if ("/opt/homebrew/opt/mysql-client/bin" | path exists) { path add "/opt/homebrew/opt/mysql-client/bin" }
 
 # ── Homebrew ──────────────────────────────────
-if ("/opt/homebrew/bin/brew" | path exists) {
-    let brew_env = (do { ^/opt/homebrew/bin/brew shellenv } | complete)
+let brew_path = if ("/opt/homebrew/bin/brew" | path exists) {
+    "/opt/homebrew/bin/brew"
+} else if ("/home/linuxbrew/.linuxbrew/bin/brew" | path exists) {
+    "/home/linuxbrew/.linuxbrew/bin/brew"
+} else {
+    null
+}
+if $brew_path != null {
+    let brew_env = (do { ^$brew_path shellenv } | complete)
     if $brew_env.exit_code == 0 {
         for line in ($brew_env.stdout | lines | where {|l| $l starts-with "export "}) {
             let kv = ($line | str replace "export " "" | str replace ";" "")

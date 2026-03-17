@@ -19,8 +19,12 @@ PATH="$PATH:./"
 export EDITOR="nvim"
 export VISUAL="zed"
 
-export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+if [[ "$OSTYPE" == darwin* ]]; then
+  export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+else
+  export SSH_AUTH_SOCK=~/.1password/agent.sock
+fi
+[ -d "/opt/homebrew/opt/mysql-client/bin" ] && export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 # wget XDG alias
 alias wget='wget --hsts-file="$XDG_STATE_HOME/wget/hsts"'
@@ -31,7 +35,11 @@ alias cc='claude --dangerously-skip-permissions'
 
 # ── Catppuccin auto theme (dark=frappe, light=latte) ──
 _catppuccin_flavor() {
-  [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]] && echo "frappe" || echo "latte"
+  if [[ "$OSTYPE" == darwin* ]]; then
+    [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]] && echo "frappe" || echo "latte"
+  else
+    echo "frappe"
+  fi
 }
 
 # fzf — set colors at shell startup (no wrapper needed, fzf reads env var)
@@ -51,10 +59,14 @@ fi
 
 zj() {
   local theme
-  if [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]]; then
-    theme="catppuccin-mocha-vivid"
+  if [[ "$OSTYPE" == darwin* ]]; then
+    if [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]]; then
+      theme="catppuccin-mocha-vivid"
+    else
+      theme="catppuccin-frappe-vivid"
+    fi
   else
-    theme="catppuccin-frappe-vivid"
+    theme="catppuccin-mocha-vivid"
   fi
   command zellij options --theme "$theme" 2>/dev/null
   command zellij "$@"
@@ -75,4 +87,4 @@ lzd() {
 # bt, hx, cot theme switching handled by theme-switch LaunchAgent
 
 # Added by Antigravity
-export PATH="/Users/gears/.antigravity/antigravity/bin:$PATH"
+[ -d "$HOME/.antigravity" ] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"

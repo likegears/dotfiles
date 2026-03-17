@@ -73,15 +73,19 @@ export EDITOR="nvim"
 export VISUAL="zed"
 
 # ── SSH (1Password) ──────────────────────────
-export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+if [[ "$OSTYPE" == darwin* ]]; then
+  export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+else
+  export SSH_AUTH_SOCK=~/.1password/agent.sock
+fi
 
 # ── PATH ─────────────────────────────────────
-export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+[ -d "/opt/homebrew/opt/mysql-client/bin" ] && export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 PATH="$PATH:./"
-export PATH="$PATH:/Users/gears/Library/Application Support/JetBrains/Toolbox/scripts"
-export PATH="$PATH:/System/Volumes/Data/Applications/Obsidian.app/Contents/MacOS"
-export PATH="/Users/gears/.antigravity/antigravity/bin:$PATH"
+[ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ] && export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+[ -d "/System/Volumes/Data/Applications/Obsidian.app" ] && export PATH="$PATH:/System/Volumes/Data/Applications/Obsidian.app/Contents/MacOS"
+[ -d "$HOME/.antigravity" ] && export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 
 # ── Aliases ──────────────────────────────────
 alias cc='claude --dangerously-skip-permissions'
@@ -92,7 +96,11 @@ alias wget='wget --hsts-file="$XDG_STATE_HOME/wget/hsts"'
 
 # ── Catppuccin auto theme ────────────────────
 _catppuccin_flavor() {
-  [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]] && echo "frappe" || echo "latte"
+  if [[ "$OSTYPE" == darwin* ]]; then
+    [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]] && echo "frappe" || echo "latte"
+  else
+    echo "frappe"
+  fi
 }
 
 if [[ "$(_catppuccin_flavor)" == "frappe" ]]; then
@@ -111,10 +119,14 @@ fi
 
 zj() {
   local theme
-  if [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]]; then
-    theme="catppuccin-mocha-vivid"
+  if [[ "$OSTYPE" == darwin* ]]; then
+    if [[ "$(defaults read -g AppleInterfaceStyle 2>/dev/null)" == "Dark" ]]; then
+      theme="catppuccin-mocha-vivid"
+    else
+      theme="catppuccin-frappe-vivid"
+    fi
   else
-    theme="catppuccin-frappe-vivid"
+    theme="catppuccin-mocha-vivid"
   fi
   command zellij options --theme "$theme" 2>/dev/null
   command zellij "$@"
@@ -134,13 +146,22 @@ lzd() {
 
 bt() {
   local f=$(_catppuccin_flavor)
-  sed -i '' "s|color_theme = .*|color_theme = \"$HOME/.config/btop/themes/catppuccin_${f}.theme\"|" \
-    "$HOME/.config/btop/btop.conf"
+  if [[ "$OSTYPE" == darwin* ]]; then
+    sed -i '' "s|color_theme = .*|color_theme = \"$HOME/.config/btop/themes/catppuccin_${f}.theme\"|" \
+      "$HOME/.config/btop/btop.conf"
+  else
+    sed -i "s|color_theme = .*|color_theme = \"$HOME/.config/btop/themes/catppuccin_${f}.theme\"|" \
+      "$HOME/.config/btop/btop.conf"
+  fi
   command btop "$@"
 }
 
 # ── Tool inits ───────────────────────────────
-command -v brew >/dev/null 2>&1 && eval "$(/opt/homebrew/bin/brew shellenv)"
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"
-source ~/.orbstack/shell/init.bash 2>/dev/null || :
+[ -f ~/.orbstack/shell/init.bash ] && source ~/.orbstack/shell/init.bash 2>/dev/null

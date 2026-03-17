@@ -63,6 +63,6 @@ fi
 
 # ── 2. Sync Vivaldi bookmarks to Safari ──
 echo "$(date): Syncing Vivaldi bookmarks to Safari" >> "$LOG"
-/usr/bin/python3 /Users/gears/Scripts/vivaldi_to_safari.py >> "$LOG" 2>&1 || true
+/usr/bin/python3 "$HOME/Scripts/vivaldi_to_safari.py" >> "$LOG" 2>&1 || true
 
 echo "$(date): Done" >> "$LOG"

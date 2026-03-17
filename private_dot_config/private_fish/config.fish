@@ -4,15 +4,19 @@ if status is-interactive
     set -gx VISUAL zed
 
     # ── SSH auth (1Password) ──────────────────────────────────
-    set -gx SSH_AUTH_SOCK "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    if test (uname) = Darwin
+        set -gx SSH_AUTH_SOCK "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    else
+        set -gx SSH_AUTH_SOCK "$HOME/.1password/agent.sock"
+    end
 
     # ── PATH additions ────────────────────────────────────────
-    fish_add_path /opt/homebrew/opt/mysql-client/bin
+    test -d /opt/homebrew/opt/mysql-client/bin; and fish_add_path /opt/homebrew/opt/mysql-client/bin
     fish_add_path $HOME/.local/bin
     fish_add_path -a ./
-    fish_add_path -a $HOME/.antigravity/antigravity/bin
-    fish_add_path -a "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
-    fish_add_path -a /System/Volumes/Data/Applications/Obsidian.app/Contents/MacOS
+    test -d $HOME/.antigravity; and fish_add_path -a $HOME/.antigravity/antigravity/bin
+    test -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"; and fish_add_path -a "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+    test -d /System/Volumes/Data/Applications/Obsidian.app; and fish_add_path -a /System/Volumes/Data/Applications/Obsidian.app/Contents/MacOS
 
     # ── Abbreviations ─────────────────────────────────────────
     abbr -a cc 'claude --dangerously-skip-permissions'
@@ -33,6 +37,8 @@ if status is-interactive
     # ── Homebrew ──────────────────────────────────────────────
     if test -x /opt/homebrew/bin/brew
         eval (/opt/homebrew/bin/brew shellenv)
+    else if test -x /home/linuxbrew/.linuxbrew/bin/brew
+        eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
     end
 
     # ── direnv ────────────────────────────────────────────────
@@ -46,7 +52,7 @@ if status is-interactive
     end
 
     # ── OrbStack ──────────────────────────────────────────────
-    source ~/.orbstack/shell/init2.fish 2>/dev/null; or true
+    test -f ~/.orbstack/shell/init2.fish; and source ~/.orbstack/shell/init2.fish 2>/dev/null
 
     # ── fzf catppuccin auto theme ─────────────────────────────
     _set_fzf_catppuccin_theme
