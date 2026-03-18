@@ -1,0 +1,27 @@
+#!/bin/sh
+set -eu
+
+if [ -n "${WSL_DISTRO_NAME-}" ]; then
+  if command -v tailscale.exe >/dev/null 2>&1; then
+    exec tailscale.exe "$@"
+  fi
+
+  if command -v cmd.exe >/dev/null 2>&1 && command -v wslpath >/dev/null 2>&1; then
+    win_programfiles="$(cmd.exe /c echo %ProgramFiles% 2>/dev/null | tr -d '\r')"
+    if [ -n "$win_programfiles" ] && [ "$win_programfiles" != "%ProgramFiles%" ]; then
+      unix_programfiles="$(wslpath "$win_programfiles")"
+      if [ -x "$unix_programfiles/Tailscale/tailscale.exe" ]; then
+        exec "$unix_programfiles/Tailscale/tailscale.exe" "$@"
+      fi
+    fi
+  fi
+fi
+
+for candidate in /usr/bin/tailscale /usr/sbin/tailscale /usr/local/bin/tailscale; do
+  if [ -x "$candidate" ] && [ "$candidate" != "$0" ]; then
+    exec "$candidate" "$@"
+  fi
+done
+
+echo "tailscale not found. Install Tailscale on Windows or Linux." >&2
+exit 1

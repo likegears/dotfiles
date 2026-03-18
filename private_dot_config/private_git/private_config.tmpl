@@ -1,8 +1,11 @@
+{{- $isWSL := ne (env "WSL_DISTRO_NAME") "" -}}
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
+[include]
+	path = ~/.config/git/config.local
 [user]
 	name = likegears
 	email = 30487484+likegears@users.noreply.github.com
@@ -10,10 +13,13 @@
 [gpg]
 	format = ssh
 [gpg "ssh"]
-{{ if eq .chezmoi.os "darwin" }}	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign{{ else }}	program = /opt/1Password/op-ssh-sign{{ end }}
+{{ if eq .chezmoi.os "darwin" }}	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign{{ else if eq .chezmoi.os "windows" }}	program = {{ .chezmoi.homeDir }}/.local/bin/op-ssh-sign.cmd{{ else if $isWSL }}	program = {{ .chezmoi.homeDir }}/.local/bin/op-ssh-sign-wsl{{ else }}	program = /opt/1Password/op-ssh-sign{{ end }}
 [commit]
 	gpgsign = true
 [core]
 	editor = nvim
+{{ if eq .chezmoi.os "windows" }}	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+{{ else if $isWSL }}	sshCommand = ssh.exe
+{{ end }}
 [credential]
 	helper =

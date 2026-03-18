@@ -1,5 +1,6 @@
 local wezterm = require('wezterm')
 local platform = require('utils.platform')
+local domains = require('config.domains')
 local backdrops = require('utils.backdrops')
 local act = wezterm.action
 
@@ -60,7 +61,13 @@ local keys = {
    -- tabs --
    -- tabs: spawn+close
    { key = 't',          mods = mod.SUPER,     action = act.SpawnTab('DefaultDomain') },
-   { key = 't',          mods = mod.SUPER_REV, action = act.SpawnTab({ DomainName = 'WSL:Ubuntu' }) },
+   {
+      key = 't',
+      mods = mod.SUPER_REV,
+      action = domains.default_wsl_domain
+         and act.SpawnTab({ DomainName = domains.default_wsl_domain })
+         or act.ShowLauncherArgs({ flags = 'DOMAINS' }),
+   },
    { key = 'w',          mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
 
    -- tabs: navigation

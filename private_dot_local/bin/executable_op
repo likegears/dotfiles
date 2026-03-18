@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+
+if [ -n "${WSL_DISTRO_NAME-}" ]; then
+  if command -v op.exe >/dev/null 2>&1; then
+    exec op.exe "$@"
+  fi
+
+  if command -v cmd.exe >/dev/null 2>&1 && command -v wslpath >/dev/null 2>&1; then
+    win_localappdata="$(cmd.exe /c echo %LOCALAPPDATA% 2>/dev/null | tr -d '\r')"
+    if [ -n "$win_localappdata" ] && [ "$win_localappdata" != "%LOCALAPPDATA%" ]; then
+      unix_localappdata="$(wslpath "$win_localappdata")"
+
+      found_path="$(find "$unix_localappdata/Microsoft/WinGet/Packages" -maxdepth 4 -type f -name op.exe 2>/dev/null | head -n 1 || true)"
+      if [ -n "$found_path" ]; then
+        exec "$found_path" "$@"
+      fi
+    fi
+  fi
+fi
+
+for candidate in /opt/homebrew/bin/op /usr/local/bin/op /usr/bin/op /home/linuxbrew/.linuxbrew/bin/op; do
+  if [ -x "$candidate" ] && [ "$candidate" != "$0" ]; then
+    exec "$candidate" "$@"
+  fi
+done
+
+echo "op not found. Install 1Password CLI or make op.exe available from WSL." >&2
+exit 1

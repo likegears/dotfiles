@@ -1,6 +1,6 @@
 # Dotfiles (chezmoi)
 
-Cross-platform dotfiles managed by [chezmoi](https://chezmoi.io). Supports **macOS** (primary), **WSL/Linux**, and partial **Windows** via WSL.
+Cross-platform dotfiles managed by [chezmoi](https://chezmoi.io). Supports **macOS** (primary), **WSL/Linux**, and partial **Windows** with native terminal/SSH support plus WSL integration.
 
 ## Setup
 
@@ -16,6 +16,26 @@ brew bundle install --file=~/.local/share/chezmoi/Brewfile
 # 3. Install App Store apps (macOS only)
 awk '{print $1}' ~/.local/share/chezmoi/Masfile | xargs mas install
 ```
+
+### Windows Host + WSL
+
+```powershell
+# Windows host only
+chezmoi init --apply likegears
+
+# Windows host + one WSL distro
+~/.local/bin/sync-dotfiles.ps1
+```
+
+Notes:
+
+- `sync-dotfiles.ps1` updates the Windows host first, then updates one WSL distro.
+- If you have multiple distros, set `WEZTERM_WSL_DISTRO` or pass `-WslDistro`.
+- The WSL distro must have a normal default user, plus `git` and `curl` installed.
+- `sync-dotfiles.ps1` repairs missing WSL interop registration on systemd-based distros before syncing.
+- In WSL, `~/.local/bin/op` and `~/.local/bin/tailscale` call the Windows `op.exe` and `tailscale.exe` when available.
+- In WSL, Git uses `ssh.exe` and a WSL-side `op-ssh-sign-wsl` wrapper so signing/auth flows through the Windows 1Password app.
+- Windows should have the 1Password desktop app, the 1Password CLI (`op.exe`), and Tailscale installed.
 
 ### Daily Operations
 
@@ -45,6 +65,15 @@ chezmoi re-add                    # Re-add all changed managed files
 | Homebrew | `/opt/homebrew/bin/brew` | `/home/linuxbrew/.linuxbrew/bin/brew` or system |
 | Theme detection | `defaults read -g AppleInterfaceStyle` | Defaults to "frappe" (dark) |
 | LaunchAgents, Rime | Deployed | Skipped via `.chezmoiignore` |
+
+### Windows notes
+
+- Native Windows keeps the same XDG-style layout under `~/.config`, `~/.local/share`, and `~/.local/bin`.
+- SSH uses Windows OpenSSH with the 1Password system agent, so `SSH_AUTH_SOCK` is left unset on Windows shells.
+- Git SSH signing uses `~/.local/bin/op-ssh-sign.cmd`, which locates `op-ssh-sign.exe` dynamically per machine.
+- WezTerm auto-discovers WSL domains on Windows. Set `WEZTERM_WSL_DISTRO` if you want a specific distro to be the default.
+- In WSL, Git uses `ssh.exe` and `~/.local/bin/op-ssh-sign-wsl` so Windows 1Password can serve both environments.
+- In WSL, `op` and `tailscale` prefer the Windows-side executables and fall back to native Linux installs when needed.
 
 ## Modules
 

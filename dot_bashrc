@@ -75,8 +75,12 @@ export VISUAL="zed"
 # ── SSH (1Password) ──────────────────────────
 if [[ "$OSTYPE" == darwin* ]]; then
   export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
-else
+elif [[ -n "$WSL_DISTRO_NAME" ]]; then
+  unset SSH_AUTH_SOCK
+elif [[ "$OSTYPE" == linux* ]]; then
   export SSH_AUTH_SOCK=~/.1password/agent.sock
+else
+  unset SSH_AUTH_SOCK
 fi
 
 # ── PATH ─────────────────────────────────────

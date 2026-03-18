@@ -39,10 +39,15 @@ $env.EDITOR = "nvim"
 $env.VISUAL = "zed"
 
 # ── SSH (1Password) ──────────────────────────
+let is_wsl = (($env | columns) | any {|c| $c == "WSL_DISTRO_NAME" })
 if (sys host | get name) == "Darwin" {
     $env.SSH_AUTH_SOCK = ($env.HOME | path join "Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock")
-} else {
+} else if $is_wsl {
+    hide-env SSH_AUTH_SOCK
+} else if (sys host | get name) == "Linux" {
     $env.SSH_AUTH_SOCK = ($env.HOME | path join ".1password/agent.sock")
+} else {
+    hide-env SSH_AUTH_SOCK
 }
 
 # ── PATH ──────────────────────────────────────

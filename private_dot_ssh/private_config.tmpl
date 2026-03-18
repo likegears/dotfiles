@@ -1,3 +1,5 @@
+{{- $isWSL := ne (env "WSL_DISTRO_NAME") "" -}}
+{{- $useLinuxAgent := and (eq .chezmoi.os "linux") (not $isWSL) -}}
 {{ if eq .chezmoi.os "darwin" }}
 Include ~/.orbstack/ssh/config
 {{ end }}
@@ -6,13 +8,13 @@ Include ~/.orbstack/ssh/config
 Host github.com
 	User git
 	IdentityFile ~/.local/share/ssh/1password/jhkfyppiwejxno2dxq6ppck25e.pub
-{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
+{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else if $useLinuxAgent }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
 
 Host gitea.likegears.com
 	User git
 	Port 33233
 	IdentityFile ~/.local/share/ssh/1password/dm5cz4tpjemtqbyk4hylgeachi.pub
-{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
+{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else if $useLinuxAgent }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
 
 # ── Servers ──────────────────────────────────
 
@@ -22,14 +24,22 @@ Host 77
 	Port 22
 	IdentityFile ~/.local/share/ssh/1password/j3dy2wtgzk7siko3plyovbmto4.pub
 	ForwardAgent yes
-{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
+{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else if $useLinuxAgent }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
 
 Host ai
 	User long
 	HostName 192.168.1.129
 	Port 22
 	IdentityFile ~/.local/share/ssh/1password/j3dy2wtgzk7siko3plyovbmto4.pub
-{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
+{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else if $useLinuxAgent }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
+	ForwardAgent yes
+
+Host 192.168.1.129
+	User long
+	HostName 192.168.1.129
+	Port 22
+	IdentityFile ~/.local/share/ssh/1password/j3dy2wtgzk7siko3plyovbmto4.pub
+{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else if $useLinuxAgent }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
 	ForwardAgent yes
 
 Host rootai
@@ -37,27 +47,27 @@ Host rootai
 	HostName 192.168.1.129
 	Port 22
 	IdentityFile ~/.local/share/ssh/1password/j3dy2wtgzk7siko3plyovbmto4.pub
-{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
+{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else if $useLinuxAgent }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
 	ForwardAgent yes
 
 Host hkdmit
 	User root
 	HostName 103.117.101.44
 	IdentityFile ~/.local/share/ssh/1password/uv7tkrd6jgfkbmiohksbyavg4u.pub
-{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
+{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else if $useLinuxAgent }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
 
 Host Macmini
 	User gears
 	HostName 192.168.0.69
 	IdentityFile ~/.local/share/ssh/1password/tsist5cht2hiqxhp6dcl5svjvy.pub
-{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
+{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else if $useLinuxAgent }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
 
 Host 192.168.1.88
 	User git
 	PreferredAuthentications publickey
 	IdentitiesOnly yes
 	IdentityFile ~/.local/share/ssh/1password/2wldcbuyhiehbojkwbiuibkpcy.pub
-{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
+{{ if eq .chezmoi.os "darwin" }}	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"{{ else if $useLinuxAgent }}	IdentityAgent "~/.1password/agent.sock"{{ end }}
 
 Host openclaw
 	User root
@@ -67,7 +77,8 @@ Host openclaw
 
 # ── Default (fallback) ──────────────────────
 Host *
-	IdentityAgent none
+{{ if and (ne .chezmoi.os "windows") (not $isWSL) }}	IdentityAgent none
+{{ end }}
 	IdentitiesOnly yes
 	ServerAliveInterval 30
 	ServerAliveCountMax 10

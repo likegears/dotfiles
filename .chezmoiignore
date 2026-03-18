@@ -108,6 +108,19 @@ Library/**
 .local/bin/catppuccin-watcher.swift
 {{ end }}
 
+# Windows only
+{{ if ne .chezmoi.os "windows" }}
+.local/bin/op-ssh-sign.cmd
+.local/bin/sync-dotfiles.ps1
+{{ end }}
+
+# Linux only
+{{ if ne .chezmoi.os "linux" }}
+.local/bin/op
+.local/bin/op-ssh-sign-wsl
+.local/bin/tailscale
+{{ end }}
+
 # Rime (macOS input method)
 {{ if ne .chezmoi.os "darwin" }}
 {{ else if not (stat (joinPath .chezmoi.homeDir "Library/Rime")) }}

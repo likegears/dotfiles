@@ -6,21 +6,41 @@ LOG="/tmp/daily-maintenance.log"
 echo "========================================" >> "$LOG"
 echo "$(date): Starting daily maintenance" >> "$LOG"
 
+BREW_BIN=""
+if [ -x /opt/homebrew/bin/brew ]; then
+  BREW_BIN=/opt/homebrew/bin/brew
+elif [ -x /usr/local/bin/brew ]; then
+  BREW_BIN=/usr/local/bin/brew
+fi
+
+MAS_BIN=""
+if command -v mas >/dev/null 2>&1; then
+  MAS_BIN=$(command -v mas)
+fi
+
+if [ -z "$BREW_BIN" ]; then
+  echo "$(date): brew not found, skipping brew/mas maintenance" >> "$LOG"
+fi
+
 # ── 1. Brew update & upgrade ──
 
-/opt/homebrew/bin/brew update >> "$LOG" 2>&1
+if [ -n "$BREW_BIN" ]; then
+  "$BREW_BIN" update >> "$LOG" 2>&1
 
-OUTDATED_CASKS=$(/opt/homebrew/bin/brew outdated --greedy --cask --quiet 2>/dev/null || true)
+  OUTDATED_CASKS=$("$BREW_BIN" outdated --greedy --cask --quiet 2>/dev/null || true)
 
-/opt/homebrew/bin/brew upgrade --greedy >> "$LOG" 2>&1
-/opt/homebrew/bin/brew cleanup >> "$LOG" 2>&1
+  "$BREW_BIN" upgrade --greedy >> "$LOG" 2>&1
+  "$BREW_BIN" cleanup >> "$LOG" 2>&1
+else
+  OUTDATED_CASKS=""
+fi
 
 # Mac App Store updates
 echo "$(date): Checking Mac App Store updates" >> "$LOG"
-MAS_OUTDATED=$(/opt/homebrew/bin/mas outdated 2>/dev/null || true)
-if [ -n "$MAS_OUTDATED" ]; then
+MAS_OUTDATED=$([ -n "$MAS_BIN" ] && "$MAS_BIN" outdated 2>/dev/null || true)
+if [ -n "$MAS_OUTDATED" ] && [ -n "$MAS_BIN" ]; then
   echo "$MAS_OUTDATED" >> "$LOG"
-  /opt/homebrew/bin/mas upgrade >> "$LOG" 2>&1 || true
+  "$MAS_BIN" upgrade >> "$LOG" 2>&1 || true
 fi
 
 # Find updated apps that are currently running
@@ -28,7 +48,7 @@ if [ -n "$OUTDATED_CASKS" ]; then
   RESTART_LIST=""
   RESTART_APPS=""
   for cask in $OUTDATED_CASKS; do
-    APP=$(/opt/homebrew/bin/brew info --cask "$cask" 2>/dev/null | grep -o '/Applications/.*\.app' | head -1)
+    APP=$("$BREW_BIN" info --cask "$cask" 2>/dev/null | grep -o '/Applications/.*\.app' | head -1)
     [ -z "$APP" ] && continue
     APP_NAME=$(basename "$APP" .app)
     if pgrep -xq "$APP_NAME" 2>/dev/null; then
@@ -63,10 +83,12 @@ fi
 
 # ── 2. Export Brewfile & mas list to chezmoi ──
 CHEZMOI_SRC="$HOME/.local/share/chezmoi"
-if [ -d "$CHEZMOI_SRC" ]; then
+if [ -d "$CHEZMOI_SRC" ] && [ -n "$BREW_BIN" ]; then
   echo "$(date): Exporting Brewfile and mas list" >> "$LOG"
-  /opt/homebrew/bin/brew bundle dump --describe --force --file="$CHEZMOI_SRC/Brewfile" >> "$LOG" 2>&1 || true
-  /opt/homebrew/bin/mas list | sort -t' ' -k2 > "$CHEZMOI_SRC/Masfile" 2>> "$LOG" || true
+  "$BREW_BIN" bundle dump --describe --force --file="$CHEZMOI_SRC/Brewfile" >> "$LOG" 2>&1 || true
+  if [ -n "$MAS_BIN" ]; then
+    "$MAS_BIN" list | sort -t' ' -k2 > "$CHEZMOI_SRC/Masfile" 2>> "$LOG" || true
+  fi
 fi
 
 # ── 3. Sync Vivaldi bookmarks to Safari ──

@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+
+if command -v op-ssh-sign.exe >/dev/null 2>&1; then
+  exec op-ssh-sign.exe "$@"
+fi
+
+if command -v cmd.exe >/dev/null 2>&1 && command -v wslpath >/dev/null 2>&1; then
+  win_localappdata="$(cmd.exe /c echo %LOCALAPPDATA% 2>/dev/null | tr -d '\r')"
+  if [ -n "$win_localappdata" ] && [ "$win_localappdata" != "%LOCALAPPDATA%" ]; then
+    unix_localappdata="$(wslpath "$win_localappdata")"
+    if [ -x "$unix_localappdata/1Password/app/8/op-ssh-sign.exe" ]; then
+      exec "$unix_localappdata/1Password/app/8/op-ssh-sign.exe" "$@"
+    fi
+
+    found_path="$(find "$unix_localappdata/1Password/app" -maxdepth 2 -type f -name op-ssh-sign.exe 2>/dev/null | head -n 1 || true)"
+    if [ -n "$found_path" ]; then
+      exec "$found_path" "$@"
+    fi
+  fi
+fi
+
+echo "op-ssh-sign.exe not found from WSL. Install 1Password on Windows or add it to PATH." >&2
+exit 1
