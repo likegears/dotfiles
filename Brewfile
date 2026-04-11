@@ -8,12 +8,14 @@ brew "boost"
 brew "btop"
 # Manage your dotfiles across multiple diverse machines, securely
 brew "chezmoi"
-# Load/unload environment variables based on $PWD
-brew "direnv"
 # Cryptography and SSL/TLS Toolkit
 brew "openssl@3"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
+# CLI tool for Cloudflare Workers
+brew "cloudflare-wrangler"
+# Load/unload environment variables based on $PWD
+brew "direnv"
 # Development kit for the Java programming language
 brew "openjdk"
 # LLVM bytecode to JavaScript compiler
@@ -22,6 +24,8 @@ brew "emscripten"
 brew "fastfetch"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
+# Play, record, convert, and stream select audio and video codecs
+brew "ffmpeg"
 # User-friendly command-line shell for UNIX-like operating systems
 brew "fish"
 # Command-line fuzzy finder written in Go
@@ -32,6 +36,8 @@ brew "gemini-cli"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Git extension for versioning large files
+brew "git-lfs"
 # GitHub Model Context Protocol server for AI tools
 brew "github-mcp-server"
 # Open source programming language to build simple/reliable/efficient software
@@ -133,7 +139,7 @@ cask "clash-party"
 # Anthropic's official Claude AI desktop app
 cask "claude"
 # Terminal-based AI coding assistant
-cask "claude-code"
+cask "claude-code@latest"
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
 # OpenAI's Codex desktop app for managing coding agents
@@ -212,6 +218,8 @@ cask "raycast"
 cask "reqable"
 # File sync and share software
 cask "resilio-sync"
+# Design tool that creates functional graphics
+cask "rive"
 # Open source virtual/remote desktop application
 cask "rustdesk"
 # Screen recorder and editor
@@ -236,8 +244,6 @@ cask "telegram"
 cask "tencent-meeting"
 # SSH client
 cask "termius"
-# Web browser
-cask "thebrowsercompany-dia"
 # Charting and social-networking for investment traders
 cask "tradingview"
 # AI voice dictation that turns speech into polished text
@@ -258,102 +264,3 @@ cask "wpsoffice-cn"
 cask "zed"
 # Gecko based web browser
 cask "zen"
-mas "1Password for Safari", id: 1569813296
-mas "Amphetamine", id: 937984704
-mas "Bob", id: 1630034110
-mas "Budget Flow", id: 1640091876
-mas "Capital One Shopping", id: 1477110326
-mas "Immersive Translate", id: 6447957425
-mas "Infuse", id: 1136220934
-mas "Microsoft Excel", id: 462058435
-mas "Microsoft PowerPoint", id: 462062816
-mas "Microsoft Word", id: 462054704
-mas "Pages", id: 409201541
-mas "Perplexity", id: 6714467650
-mas "Prime Video", id: 545519333
-mas "Save to Raindrop.io", id: 1549370672
-mas "SnippetsLab", id: 1006087419
-mas "TickTick", id: 966085870
-mas "WeChat", id: 836500024
-mas "Windows App", id: 1295203466
-mas "Xcode", id: 497799835
-vscode "aaron-bond.better-comments"
-vscode "asvetliakov.vscode-neovim"
-vscode "batisteo.vscode-django"
-vscode "be5invis.vscode-custom-css"
-vscode "carlos18mz.cyberpunk-2077-rebuild"
-vscode "catppuccin.catppuccin-vsc"
-vscode "catppuccin.catppuccin-vsc-icons"
-vscode "docker.docker"
-vscode "donjayamanne.python-environment-manager"
-vscode "donjayamanne.python-extension-pack"
-vscode "enkia.tokyo-night"
-vscode "gaogaotiantian.viztracer-vscode"
-vscode "github.codespaces"
-vscode "github.copilot-chat"
-vscode "github.remotehub"
-vscode "github.vscode-github-actions"
-vscode "gitlab.gitlab-workflow"
-vscode "golang.go"
-vscode "jwsandeman.cyberpunk2077-theme"
-vscode "kevinrose.vsc-python-indent"
-vscode "mathworks.language-matlab"
-vscode "max-ss.cyberpunk"
-vscode "mechatroner.rainbow-csv"
-vscode "medo64.render-crlf"
-vscode "mhutchie.git-graph"
-vscode "microhobby.linuxkerneldev"
-vscode "ms-azuretools.vscode-containers"
-vscode "ms-azuretools.vscode-docker"
-vscode "ms-dotnettools.csdevkit"
-vscode "ms-dotnettools.csharp"
-vscode "ms-dotnettools.vscode-dotnet-runtime"
-vscode "ms-dotnettools.vscodeintellicode-csharp"
-vscode "ms-edgedevtools.vscode-edge-devtools"
-vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
-vscode "ms-python.debugpy"
-vscode "ms-python.python"
-vscode "ms-python.vscode-pylance"
-vscode "ms-python.vscode-python-envs"
-vscode "ms-toolsai.datawrangler"
-vscode "ms-toolsai.jupyter"
-vscode "ms-toolsai.jupyter-hub"
-vscode "ms-toolsai.jupyter-keymap"
-vscode "ms-toolsai.jupyter-renderers"
-vscode "ms-toolsai.vscode-jupyter-cell-tags"
-vscode "ms-toolsai.vscode-jupyter-slideshow"
-vscode "ms-vscode-remote.remote-containers"
-vscode "ms-vscode-remote.remote-ssh"
-vscode "ms-vscode-remote.remote-ssh-edit"
-vscode "ms-vscode-remote.remote-wsl"
-vscode "ms-vscode-remote.vscode-remote-extensionpack"
-vscode "ms-vscode.azure-repos"
-vscode "ms-vscode.cmake-tools"
-vscode "ms-vscode.cpptools"
-vscode "ms-vscode.cpptools-extension-pack"
-vscode "ms-vscode.cpptools-themes"
-vscode "ms-vscode.live-server"
-vscode "ms-vscode.makefile-tools"
-vscode "ms-vscode.remote-explorer"
-vscode "ms-vscode.remote-repositories"
-vscode "ms-vscode.remote-server"
-vscode "njpwerner.autodocstring"
-vscode "oderwat.indent-rainbow"
-vscode "redhat.java"
-vscode "redhat.vscode-yaml"
-vscode "rooveterinaryinc.roo-cline"
-vscode "rust-lang.rust-analyzer"
-vscode "sharashchandradesai.simple-scratch"
-vscode "twxs.cmake"
-vscode "visualstudioexptteam.intellicode-api-usage-examples"
-vscode "visualstudioexptteam.vscodeintellicode"
-vscode "vscjava.vscode-gradle"
-vscode "vscjava.vscode-java-debug"
-vscode "vscjava.vscode-java-dependency"
-vscode "vscjava.vscode-java-pack"
-vscode "vscjava.vscode-java-test"
-vscode "vscjava.vscode-maven"
-vscode "vscjava.vscode-spring-initializr"
-vscode "wholroyd.jinja"
-go "golang.org/x/tools/gopls"
-go "honnef.co/go/tools/cmd/staticcheck"
