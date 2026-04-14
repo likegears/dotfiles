@@ -14,6 +14,8 @@ brew "openssl@3"
 brew "node"
 # CLI tool for Cloudflare Workers
 brew "cloudflare-wrangler"
+# Cloudflare Tunnel client (formerly Argo Tunnel)
+brew "cloudflared"
 # Load/unload environment variables based on $PWD
 brew "direnv"
 # Development kit for the Java programming language
@@ -238,6 +240,8 @@ cask "superwhisper"
 cask "surge"
 # App to switch hosts
 cask "switchhosts"
+# Sync and backup service to Synology NAS drives
+cask "synology-drive"
 # Messaging app with a focus on speed and security
 cask "telegram"
 # Cloud video conferencing
